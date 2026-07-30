@@ -1,0 +1,27 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+# Secrets / local env
+.env
+.env.*
+!.env.example
+*.pem
+credentials.json
+
+# Darwin / local backups
+SKILL.md.bak.*
+*.bak.*
+darwin-result-card.html
+darwin-result-card.png
+
+# Runtime / deps (if added later)
+node_modules/
+__pycache__/
+*.pyc
+.venv/

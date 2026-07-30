@@ -75,6 +75,8 @@ Demo 仓：本地 `cakeshop`（Java/Tomcat Docker，`localhost:8080`）。
 | bug | `fix-cart-delitem-null-npe` | 修复前 delItem **500 NPE** → 修复后 **302** 到购物车；`check_delegate_artifacts.sh` OK |
 | feature | `guard-empty-cart-on-submit` | 修复前 subOrder **500 NPE** → 修复后 **200** + `请先登录再提交订单`；脚本 OK |
 
+**黄金路径**（同日 curl）：登录 `user` → 加购 → `subOrder` → **订单提交成功**（￥238）；守卫未误伤；空车/未登录仍拦截。详见 demo 仓 `.delegate/guard-empty-cart-on-submit/notes.md`。
+
 产物在目标仓：`.delegate/<slug>/{task,map,change,notes}.md`（建议 gitignore）。
 
 ### 价值一句话

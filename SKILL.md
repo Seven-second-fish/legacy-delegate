@@ -38,6 +38,19 @@ Task types: `bug` | `feature` | `refactor` (MVP: refactor = **light only**, see 
 
 Stop and say so (or set `aborted`) if: typo/copy-only with exact file given; user wants explanation only; user already has a full patch to apply; issue needs debugger/prod signals unavailable → `blocked`.
 
+## Failure modes (if X → Y)
+
+| Trigger | First fix | Still failing → fallback |
+|---------|-----------|--------------------------|
+| Env / repro / access missing | Set `task.md` `status: blocked`; list exact asks | **🛑 STOP** — no business edits; wait for user |
+| Map DoD incomplete (unknowns block the fix) | Fill Open questions; keep `map.md` `status: draft` | **🔴 CHECKPOINT** — ask user; do **not** enter Change |
+| User asserts chain clear + exact files | Set `fast_path: true` + reason + file list; short `map.md` | If files/intent vague → refuse fast path; do full Map |
+| Cannot reproduce bug | Ask for repro or user-confirmed steps | `blocked` or keep investigating; **never** patch at L0 and claim done |
+| Patch tried, still fails / root cause unclear | Record attempts in `change.md`; revise hypotheses from Map | Document unknowns; ask user; do not claim done |
+| `check_delegate_artifacts.sh` fails | Fix missing files / section markers / `evidence_grade` | Stay `in_progress`; re-run script before any done claim |
+| Scope grows mid-Change | Stop coding; update Map boundary | **🔴 CHECKPOINT** — get user OK before continuing |
+| Wrong skill fit (see When not to use) | Say so; set `aborted` | Keep artifacts; no further code edits |
+
 ## Workflow checklist
 
 ```
@@ -59,7 +72,7 @@ Fill `task.md` from [templates/task.md](templates/task.md):
 - `investigate_only` / `fast_path` if applicable
 - Read repo guide files; note build/test commands
 
-If blocked on env/repro/access: set status `blocked`, list asks, **stop**.
+**🔴 CHECKPOINT · 🛑 STOP**：If blocked on env/repro/access → set `status: blocked`, list asks, **stop** (no Map/Change).
 
 ### 1) Map
 
@@ -78,6 +91,8 @@ Fill `map.md` from [templates/map.md](templates/map.md).
 **Fast path**: only if user gave exact files/symbols + intent and asserts chain is clear. Set `fast_path: true` + reason + file list in `task.md`. Still write a **short** `map.md` (touch list + boundary).
 
 **Investigate-only**: complete Map (+ optional notes); **no** business code edits.
+
+**🔴 CHECKPOINT · 🛑 STOP**：Do **not** start Change until Map is `complete` **or** valid `fast_path` is recorded. If Open questions remain → ask user and wait.
 
 Detail tips: [references/map-guidance.md](references/map-guidance.md).
 
@@ -102,6 +117,8 @@ Fill `change.md` from [templates/change.md](templates/change.md).
 | L2 | Tests or agreed log/probe checks pass | Yes, preferred |
 
 Minimal diffs. Do not “while we’re here” refactor unless type is refactor.
+
+**🔴 CHECKPOINT**：If evidence is still L0, or script check fails → **do not** claim done; follow Failure modes table.
 
 ### 3) Leave
 

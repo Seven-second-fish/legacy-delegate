@@ -1,6 +1,6 @@
 # legacy-delegate — 计划文档
 
-> 状态：S0–S5 已完成（可用）；S6 可选  
+> 状态：S0–S6 已完成（可用并已开源包装）  
 > 位置：`~/.cursor/skills/legacy-delegate/`  
 > 更新日期：2026-07-30
 
@@ -94,19 +94,19 @@
 
 ### 6.1 MVP（第一期）
 
-- [ ] `SKILL.md`：阶段闸门、模板、触发描述
-- [ ] 产物模板：`task.md` / `map.md` / `change.md` / `notes.md`
-- [ ] bug + feature 两条 Change 流程写死
-- [ ] `delegate` / `onboard` 两种输出密度
-- [ ] 使用说明（README）：如何安装、如何触发、Demo 建议
-- [ ] 可选：`examples.md` 用一个虚构小仓走通一遍
+- [x] `SKILL.md`：阶段闸门、模板、触发描述
+- [x] 产物模板：`task.md` / `map.md` / `change.md` / `notes.md`
+- [x] bug + feature 两条 Change 流程写死
+- [x] `delegate` / `onboard` 两种输出密度
+- [x] 使用说明（README）：如何安装、如何触发、Demo 建议
+- [x] 可选：`examples.md` 用一个虚构小仓走通一遍
 
 ### 6.2 第二期
 
 - [ ] refactor 完整闸门（表征测试 / 回归清单）
 - [ ] 与 git 历史轻量结合（关键文件 churn，不作纯 git 故事 skill）
 - [ ] 跨会话续跑（读取已有 `.delegate/` 继续）
-- [ ] 简单 `scripts/`（如检查 `.delegate/` 是否齐全再允许声明 done）
+- [x] 简单 `scripts/`（如检查 `.delegate/` 是否齐全再允许声明 done）
 
 ### 6.3 明确不做（第一期）
 
@@ -122,18 +122,21 @@
 ```text
 ~/.cursor/skills/legacy-delegate/
 ├── PLAN.md                 # 本计划（已有）
-├── README.md               # 安装与用法（待写）
-├── SKILL.md                # 主技能（待写）
-├── templates/              # 产物模板（待写）
+├── README.md               # 安装与用法（开源访客入口）
+├── LICENSE                 # MIT
+├── SKILL.md                # 主技能
+├── templates/
 │   ├── task.md
 │   ├── map.md
 │   ├── change.md
 │   └── notes.md
-├── references/             # 按需加载（待写）
+├── references/
 │   ├── bug-workflow.md
 │   ├── feature-workflow.md
 │   └── refactor-workflow.md
-└── examples.md             # 可选示例（待写）
+├── scripts/
+│   └── check_delegate_artifacts.sh
+└── examples.md
 ```
 
 项目内运行时产物（由 Agent 写入被操作的仓库）：
@@ -217,9 +220,9 @@ description: >
 | S3 | 写 `README.md` + `examples.md` + check script | ✅ |
 | S4 | 用真实或 demo 仓跑通 bug + feature 各 1 例 | ✅ cakeshop 2026-07-30 |
 | S5 | （可选）加强 scripts | ✅ 反 stub / 实质段落检查 2026-07-30 |
-| S6 | （可选）整理为 GitHub 仓库对外开源 | 待定 |
+| S6 | （可选）整理为 GitHub 仓库对外开源 | ✅ README 徽章/安装/Demo + MIT LICENSE 2026-07-30 |
 
-**当前：S0–S5 完成；黄金路径已验收（cakeshop 登录+加购+提交，2026-07-30）；S6 可选。**
+**当前：S0–S6 完成；黄金路径已验收（cakeshop）；GitHub：`Seven-second-fish/legacy-delegate`。**
 
 ---
 

@@ -1,5 +1,7 @@
 # Example walkthrough (fictional)
 
+> 真实仓验收见 README「Demo：cakeshop」与 [Seven-second-fish/cakeshop](https://github.com/Seven-second-fish/cakeshop)。下文为虚构走通，便于不依赖环境时理解闸门。
+
 Repo: tiny Node service. Symptom: `POST /checkout` returns 500 when cart has a coupon.
 
 ## Orient

@@ -23,7 +23,7 @@ Gates are **protocol + optional script**, not kernel enforcement.
 5. No secrets in artifacts. Suggest `.delegate/` in `.gitignore`.
 6. Before claiming done, run: `bash <this-skill>/scripts/check_delegate_artifacts.sh .delegate/<task-slug>`
 
-Copy templates from [templates/](templates/) into the task dir; fill them (do not leave stubs).
+Copy templates from [templates/](templates/) into the task dir; fill them (**no empty stubs**). `map.md` `status: complete` only when every DoD section has real content (not placeholder `-` / empty tables).
 
 ## Modes
 
@@ -140,11 +140,18 @@ Optional: promote stable facts into repo docs **only if user asked**.
 `.delegate/<task-slug>/`
 ```
 
-**onboard**: same headings + short “Why this path” under Verdict.
+**onboard**: same headings + short “Why this path” under Verdict; in `map.md` Critical path, add **one role sentence per hop**.
+
+## Done gate (before claiming done)
+
+1. Map `complete` **or** valid `fast_path` + short map (touch list + boundary)
+2. `change.md` has `evidence_grade: L1` or `L2` with steps / before / after filled
+3. `notes.md` has regress steps (not empty)
+4. `bash <this-skill>/scripts/check_delegate_artifacts.sh .delegate/<task-slug>` → `RESULT: OK`
 
 ## Scripts
 
-- [scripts/check_delegate_artifacts.sh](scripts/check_delegate_artifacts.sh) — verify required files and naive DoD markers exist.
+- [scripts/check_delegate_artifacts.sh](scripts/check_delegate_artifacts.sh) — verify required files and naive DoD markers exist (does **not** prove content quality; you still must fill substance).
 
 ## Additional resources
 

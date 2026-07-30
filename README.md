@@ -53,3 +53,28 @@ Orient → Map → Change → Leave
 2. 启 skill，展示 map → change → notes  
 
 示例叙事见 [examples.md](examples.md)。
+
+## S4 实仓验收（cakeshop · 2026-07-30）
+
+Demo 仓：本地 `cakeshop`（Java/Tomcat Docker，`localhost:8080`）。
+
+### 不启 skill（对照）
+
+| 现象 | 风险 |
+|------|------|
+| 看到 `CartServlet`/`OrderSubServlet` 就直接加 `if` | 易漏同文件同模式（如只修 `delItem` 不修 `changeIn`） |
+| 无 Map / 无证据档 | 事后难审「改了啥、怎么回归」 |
+| 可能只改 `build/classes` 或忘 rebuild 镜像 | 源码改了容器仍 500 |
+
+### 启 skill（本轮）
+
+| 类型 | slug | 结果 |
+|------|------|------|
+| bug | `fix-cart-delitem-null-npe` | 修复前 delItem **500 NPE** → 修复后 **302** 到购物车；`check_delegate_artifacts.sh` OK |
+| feature | `guard-empty-cart-on-submit` | 修复前 subOrder **500 NPE** → 修复后 **200** + `请先登录再提交订单`；脚本 OK |
+
+产物在目标仓：`.delegate/<slug>/{task,map,change,notes}.md`（建议 gitignore）。
+
+### 价值一句话
+
+同一类空 session NPE：skill 强制先画链路与边界，再改码并留下 L1 证据，避免「眼熟就过、容器未重建」。

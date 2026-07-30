@@ -33,6 +33,8 @@ Orient 阶段会**先读**仓规，再跑流程。
 bash ~/.cursor/skills/legacy-delegate/scripts/check_delegate_artifacts.sh .delegate/<task-slug>
 ```
 
+脚本会检查：必填文件、Map DoD 标记、证据等级 L1/L2，以及**空 stub**（空章节 / 占位表格）。仍不能代替人工审内容质量。
+
 建议将 `.delegate/` 加入项目 `.gitignore`。
 
 ## 阶段

@@ -151,7 +151,7 @@ Optional: promote stable facts into repo docs **only if user asked**.
 
 ## Scripts
 
-- [scripts/check_delegate_artifacts.sh](scripts/check_delegate_artifacts.sh) — verify required files and naive DoD markers exist (does **not** prove content quality; you still must fill substance).
+- [scripts/check_delegate_artifacts.sh](scripts/check_delegate_artifacts.sh) — required files, DoD markers, L1/L2, and **naive anti-stub** (empty sections / placeholder tables fail). Still does **not** fully judge content quality.
 
 ## Additional resources
 

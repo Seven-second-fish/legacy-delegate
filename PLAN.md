@@ -1,6 +1,6 @@
 # legacy-delegate — 计划文档
 
-> 状态：S0–S4 已完成（可用）；S5/S6 可选  
+> 状态：S0–S5 已完成（可用）；S6 可选  
 > 位置：`~/.cursor/skills/legacy-delegate/`  
 > 更新日期：2026-07-30
 
@@ -216,10 +216,10 @@ description: >
 | S2 | 补齐 `templates/` 与 `references/` | ✅ |
 | S3 | 写 `README.md` + `examples.md` + check script | ✅ |
 | S4 | 用真实或 demo 仓跑通 bug + feature 各 1 例 | ✅ cakeshop 2026-07-30 |
-| S5 | （可选）加强 scripts | 基础脚本已有 |
+| S5 | （可选）加强 scripts | ✅ 反 stub / 实质段落检查 2026-07-30 |
 | S6 | （可选）整理为 GitHub 仓库对外开源 | 待定 |
 
-**当前：S0–S4 完成；S5/S6 可选。**
+**当前：S0–S5 完成；S6 可选。**
 
 ---
 

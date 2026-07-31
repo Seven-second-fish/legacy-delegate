@@ -1,0 +1,82 @@
+{
+  "skill_name": "legacy-delegate",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "用 legacy-delegate：遗留 Node 服务里 POST /checkout 在带优惠券时 500。先摸清链路再修，证据至少 L1。",
+      "expected_output": "Orient→Map→Change→Leave；.delegate/ 产物；Map complete 后再改码；结论/证据/风险/产物；check RESULT: OK",
+      "files": [],
+      "assertions": [
+        {"name": "creates_delegate_artifacts", "text": "创建 .delegate/<task-slug>/ 下 task/map/change/notes"},
+        {"name": "map_before_change", "text": "业务代码改动前 map status 为 complete 或合法 fast_path"},
+        {"name": "evidence_ge_l1", "text": "change.md evidence_grade 为 L1 或 L2"},
+        {"name": "user_reply_sections", "text": "对人回复含 结论 / 证据 / 风险 / 产物"}
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "用 legacy-delegate：在支付回调加幂等键校验，可能跨 controller/service/repo。mode=onboard，type=feature。",
+      "expected_output": "feature-workflow；Map 含影响面与边界；onboard 多写为什么；不顺手大重构",
+      "files": [],
+      "assertions": [
+        {"name": "type_feature", "text": "task.md type 为 feature"},
+        {"name": "mode_onboard", "text": "task.md mode 为 onboard 且回复含路径理由"},
+        {"name": "no_drive_by_refactor", "text": "改动未顺手大重构无关模块"}
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "只改 pricing/coupon.js 空 expiresAt 的 null 处理，链路我清楚，走 fast path。用 legacy-delegate。",
+      "expected_output": "fast_path + 短 map；仍有 change/notes；证据 ≥ L1",
+      "files": [],
+      "assertions": [
+        {"name": "fast_path_true", "text": "task.md fast_path: true"},
+        {"name": "short_map", "text": "map 含触点列表与改动边界"},
+        {"name": "leave_present", "text": "notes.md 非空壳"}
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "用 legacy-delegate 续跑：目标仓已有 .delegate/checkout-coupon-500/，上次停在 Map draft。接着做完并留下证据。",
+      "expected_output": "同 slug；resume 字段；Map 未 complete 禁改码",
+      "files": [],
+      "assertions": [
+        {"name": "same_slug", "text": "继续使用 checkout-coupon-500"},
+        {"name": "resume_fields", "text": "resume: true 且含 last_stage/resume_from"},
+        {"name": "no_skip_map_gate", "text": "Map 未 complete 前无业务代码改动"}
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "用 legacy-delegate：把 order/total.js 里折扣计算抽成纯函数，行为必须保持。type=refactor。",
+      "expected_output": "表征锁→小步改；表征证据+回滚点；证据 ≥ L1",
+      "files": [],
+      "assertions": [
+        {"name": "characterization_before_edit", "text": "改结构前有表征/行为锁记录"},
+        {"name": "rollback_section", "text": "change.md 含非空壳回滚点"},
+        {"name": "evidence_ge_l1", "text": "evidence_grade L1 或 L2"}
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "用 legacy-delegate：把 README 里一句拼写错误改掉。",
+      "expected_output": "说明不该用；aborted/blocked；不写空壳全流程",
+      "files": [],
+      "assertions": [
+        {"name": "refuse_or_abort", "text": "说明不该用或 status aborted/blocked"},
+        {"name": "no_full_protocol_shell", "text": "未为 typo 产出空壳完整 .delegate 宣称 done"}
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "用 legacy-delegate investigate_only：查清库存扣减从 API 到 DB 的链路，先不要改代码。",
+      "expected_output": "investigate_only；Map DoD；禁改业务代码",
+      "files": [],
+      "assertions": [
+        {"name": "investigate_only", "text": "task 标明 investigate_only"},
+        {"name": "map_complete", "text": "map DoD 齐全并可 complete"},
+        {"name": "no_business_edits", "text": "无业务代码改动"}
+      ]
+    }
+  ]
+}

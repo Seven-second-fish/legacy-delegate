@@ -98,6 +98,13 @@ git clone https://github.com/Seven-second-fish/legacy-delegate.git \
 
 Demo 仓：[`Seven-second-fish/cakeshop`](https://github.com/Seven-second-fish/cakeshop)（Java / Tomcat / Docker）
 
+### 裸改 vs 启 skill（Demo 资产）
+
+![裸改 vs 启 skill 轮播示意](docs/demo-bare-vs-skill.gif)
+
+- 浏览器短录屏对照：[docs/demo-walkthrough.html](docs/demo-walkthrough.html)（自动轮播三幕）
+- 分享用短贴：[docs/SHARE.md](docs/SHARE.md)（skills.sh / Cursor 社区；第二仓欢迎自带 case）
+
 ### Before → After
 
 | | 不启 skill | 启 `legacy-delegate` |
@@ -181,8 +188,10 @@ Map 阶段可对已入触点的文件附可选 **Git 线索**（见 [map-guidanc
 legacy-delegate/
 ├── SKILL.md          # 主流程（Agent 执行入口）
 ├── PLAN.md           # 规格、闸门、路线图
+├── CONTRIBUTING.md   # 贡献说明
 ├── examples.md       # 虚构小仓走通（含续跑）
-├── examples/         # 产物快照（如 resume-interrupted-map）
+├── examples/         # 产物快照
+├── docs/             # Demo GIF / 轮播页 / 分享文案
 ├── templates/        # task / map / change / notes
 ├── references/       # bug / feature / refactor / map / resume 指引
 └── scripts/
@@ -246,7 +255,9 @@ legacy-delegate/
 
 - 主技能：[SKILL.md](SKILL.md)
 - 规格与计划：[PLAN.md](PLAN.md)
+- 贡献：[CONTRIBUTING.md](CONTRIBUTING.md)
 - 虚构示例：[examples.md](examples.md)
+- Demo 资产：[docs/](docs/)
 - Demo 仓：[cakeshop](https://github.com/Seven-second-fish/cakeshop)
 
 License: [MIT](LICENSE)

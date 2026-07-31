@@ -1,9 +1,9 @@
 # legacy-delegate — 计划文档
 
-> 状态：第一期 S0–S6 已完成（可用 + 已开源）；P1–P3 已落地  
+> 状态：第一期 S0–S6 已完成；**第二期 P1–P5 已完成**（可用 + 已开源）  
 > 位置：`~/.cursor/skills/legacy-delegate/`  
 > GitHub：https://github.com/Seven-second-fish/legacy-delegate · Demo：cakeshop  
-> **当前下一刀：P4 开源曝光与 Demo 资产**（说「做 Demo 曝光」即可开工）  
+> **当前下一刀：无强制项（维护模式）** — 按需插队曝光/垂直插件；勿默认跑 Darwin  
 > 更新日期：2026-07-31
 
 本文件 = **内部规格 + 路线图 + 待办**。对外入口见 `README.md`（中文）。
@@ -129,15 +129,15 @@
 - [x] Map 可选附关键触点 churn / 热点作者（只作线索）
 - [x] 边界：不作纯 git 故事 skill；`map-guidance.md` 加「何时看 git」
 
-#### P4 — 开源曝光与 Demo 资产 ← 当前
+#### P4 — 开源曝光与 Demo 资产
 
-- [ ] README Demo GIF / 短录屏（裸改 vs 启 skill）
-- [ ] 分享 skills.sh / Cursor 社区；可选第二真实仓 case
+- [x] README Demo GIF / 短录屏（裸改 vs 启 skill）
+- [x] 分享 skills.sh / Cursor 社区；可选第二真实仓 case
 
 #### P5 — 可选打磨
 
-- [ ] 压缩 `SKILL.md`；Darwin dim9 反例（体积可控后再做）
-- [ ] 检查脚本续跑弱校验；可选 `CONTRIBUTING.md`
+- [x] 压缩 `SKILL.md`（Darwin dim9 **跳过**，按用户要求不跑）
+- [x] 检查脚本续跑弱校验；可选 `CONTRIBUTING.md`
 
 #### 已落地（原第二期 scripts）
 
@@ -260,7 +260,7 @@ description: >
 | S6 | （可选）整理为 GitHub 仓库对外开源 | ✅ README 徽章/安装/Demo + MIT LICENSE 2026-07-30 |
 
 **第一期：S0–S6 完成；黄金路径已验收（cakeshop）。**  
-**第二期：P1–P3 ✅（2026-07-31）；默认下一刀 P4 开源曝光与 Demo 资产。**
+**第二期：P1–P5 ✅（2026-07-31）；无强制下一刀（维护模式）。**
 
 第二期共用验收：无 Map complete 不改业务代码；禁 L0 宣称 done；完成前跑 check 脚本；对外叙事仍是代工 + 可审计；对外 README 为中文；续跑不得跳过未完成闸门。
 
@@ -387,3 +387,10 @@ Map 可在触点列表之外增加 **Git 线索（可选）** 段：对已定位
 - **边界**：本 skill 不作纯 git 故事 / 技术债报告工具  
 
 命令与「何时看」见 [references/map-guidance.md](references/map-guidance.md)。
+
+### 14.12 开源 Demo 与打磨（P4–P5）
+
+- Demo 资产：`docs/demo-bare-vs-skill.gif`、`docs/demo-walkthrough.html`；分享底稿 `docs/SHARE.md`（社区发帖须维护者账号操作；第二仓欢迎外部 case）  
+- `SKILL.md` 已手工压缩；**不跑** Darwin（除非用户另说）  
+- `check_delegate_artifacts.sh` 对 `resume: true` 做弱校验（`last_stage` / `resume_from` / done 时 Map 闸门）  
+- 贡献说明：`CONTRIBUTING.md`

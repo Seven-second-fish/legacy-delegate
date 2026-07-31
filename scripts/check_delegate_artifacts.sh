@@ -201,6 +201,29 @@ if [[ -f "$DIR/task.md" ]] && grep -qiE 'status:[[:space:]]*done' "$DIR/task.md"
   fi
 fi
 
+# 续跑弱校验（resume: true）
+if [[ -f "$DIR/task.md" ]] && grep -qiE '^[[:space:]]*resume:[[:space:]]*true' "$DIR/task.md"; then
+  if ! grep -qiE '^[[:space:]]*last_stage:[[:space:]]*(orient|map|change|leave)\b' "$DIR/task.md"; then
+    echo "失败: resume=true 但缺少有效 last_stage（orient|map|change|leave）"
+    fail=1
+  fi
+  if grep -qiE '^[[:space:]]*status:[[:space:]]*in_progress\b' "$DIR/task.md"; then
+    if ! grep -qiE '^[[:space:]]*resume_from:[[:space:]]*(orient|map|change|leave)\b' "$DIR/task.md"; then
+      echo "失败: 续跑 in_progress 但缺少有效 resume_from"
+      fail=1
+    fi
+  fi
+  # done 的续跑任务：Map 仍须 complete 或 fast_path（防止跳闸门宣称完成）
+  if grep -qiE '^[[:space:]]*status:[[:space:]]*done\b' "$DIR/task.md"; then
+    if [[ -f "$DIR/map.md" ]] && ! grep -qiE 'status:[[:space:]]*complete' "$DIR/map.md"; then
+      if ! grep -qiE 'fast_path:[[:space:]]*true' "$DIR/task.md"; then
+        echo "失败: 续跑后 status=done 但 map 未 complete 且无 fast_path"
+        fail=1
+      fi
+    fi
+  fi
+fi
+
 if [[ "$fail" -ne 0 ]]; then
   echo "RESULT: FAIL"
   exit 1

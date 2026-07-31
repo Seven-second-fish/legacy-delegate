@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>legacy-delegate · 裸改 vs 启 skill</title>
+  <style>
+    :root { --bg:#12161c; --fg:#e8eef5; --muted:#9aa6b5; --red:#b44646; --green:#289064; --blue:#3270b4; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: "Segoe UI", "PingFang SC", "Noto Sans SC", sans-serif; background:var(--bg); color:var(--fg); }
+    main { max-width: 720px; margin: 0 auto; padding: 2rem 1.25rem 3rem; }
+    h1 { font-size: 1.35rem; font-weight: 650; margin: 0 0 .35rem; }
+    .tag { color: var(--muted); font-size: .9rem; margin-bottom: 1.5rem; }
+    .stage { border: 1px solid #2a3340; border-radius: 12px; padding: 1.25rem 1.35rem; min-height: 220px; background: #171c24; }
+    .badge { display:inline-block; padding:.25rem .65rem; border-radius:6px; font-size:.75rem; font-weight:600; color:#fff; margin-bottom:.75rem; }
+    .badge.r { background: var(--red); }
+    .badge.g { background: var(--green); }
+    .badge.b { background: var(--blue); }
+    h2 { margin:0 0 .75rem; font-size:1.15rem; }
+    ul { margin:0; padding-left:1.1rem; color: var(--muted); line-height:1.7; }
+    .dots { display:flex; gap:.5rem; margin:1rem 0 0; }
+    .dots button { width:10px; height:10px; border-radius:50%; border:0; background:#3a4554; cursor:pointer; }
+    .dots button.on { background:#c5d0dc; }
+    .bar { margin-top:1.25rem; color:#6b7785; font-size:.8rem; }
+    a { color:#8ec7ff; }
+  </style>
+</head>
+<body>
+<main>
+  <h1>Demo：裸改 vs 启 legacy-delegate</h1>
+  <p class="tag">自动轮播 · 等价「短录屏」对照 · 真实结果见 cakeshop</p>
+  <div class="stage" id="stage" aria-live="polite"></div>
+  <div class="dots" id="dots"></div>
+  <p class="bar">legacy-delegate · Map first. Change second. Leave evidence. · <a href="https://github.com/Seven-second-fish/cakeshop">cakeshop Demo</a></p>
+</main>
+<script>
+const slides = [
+  { badge: "WITHOUT", cls: "r", title: "裸改：眼熟就过", items: ["看到 Servlet 直接加 if", "漏同模式 changeIn / 无证据可审", "老人复审要重挖一遍"] },
+  { badge: "WITH SKILL", cls: "g", title: "启 skill：先 Map 再改", items: ["Orient → Map（触点+边界）→ Change → Leave", "同模式一并列入边界", "L1/L2 证据 + .delegate/ 可审"] },
+  { badge: "DEMO", cls: "b", title: "cakeshop 对照结果", items: ["空车 delItem：500 NPE → 302", "空车提交：500 → 200 + 提示", "黄金路径下单仍成功（守卫未误伤）"] },
+];
+let i = 0;
+const stage = document.getElementById("stage");
+const dots = document.getElementById("dots");
+slides.forEach((_, n) => {
+  const b = document.createElement("button");
+  b.type = "button";
+  b.addEventListener("click", () => { i = n; render(); });
+  dots.appendChild(b);
+});
+function render() {
+  const s = slides[i];
+  stage.innerHTML = `<span class="badge ${s.cls}">${s.badge}</span><h2>${s.title}</h2><ul>${s.items.map(t => `<li>${t}</li>`).join("")}</ul>`;
+  [...dots.children].forEach((d, n) => d.classList.toggle("on", n === i));
+}
+render();
+setInterval(() => { i = (i + 1) % slides.length; render(); }, 2800);
+</script>
+</body>
+</html>

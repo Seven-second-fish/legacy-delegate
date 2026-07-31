@@ -17,6 +17,15 @@ type: bug | feature | refactor
 
 -
 
+## Handoff for resume
+
+<!-- Fill when stopping mid-task; leave N/A if done -->
+
+- Done so far:
+- Next stage (`resume_from`):
+- Open questions / blockers:
+- Do **not** edit business code until:
+
 ## Unknowns left
 
 -

@@ -64,6 +64,7 @@ Optional: `onboard` (more “why” for newcomers)
 - **Evidence grades L0 / L1 / L2** — L0 cannot claim done; L1 = reproducible; L2 = tests / probes
 - **bug / feature / light refactor** on one rope, with typed Change strategies
 - **Artifacts on disk** under `.delegate/<task-slug>/` — human-auditable, next agent can resume
+- **Cross-session resume** — continue the same slug; unfinished Map still blocks edits
 - **Anti-stub checker** — empty sections / placeholder tables fail
 - **Explicit invocation only** — `disable-model-invocation: true` so tiny edits are not forced into the full flow
 
@@ -141,6 +142,22 @@ Add `.delegate/` to the target repo’s `.gitignore` (artifacts may include envi
 
 If you already named exact files and own the chain, request fast path: still need a short map + evidence ≥ L1; do not skip Leave.
 
+### Resume / cross-session
+
+If a prior chat left `.delegate/<task-slug>/`, say:
+
+```text
+Use legacy-delegate: resume .delegate/checkout-coupon-500
+```
+
+or simply “continue” (agent picks the newest `in_progress` / `blocked` slug, or asks).
+
+- Same folder continues; set `resume: true`, `last_stage`, `resume_from` in `task.md`
+- **Unfinished gates still apply** — Map not complete ⇒ no business code edits
+- Stopping mid-task: fill **Handoff for resume** in `notes.md`
+
+Walkthrough: [examples.md](examples.md#resume-interrupted-at-map--new-session) · snapshots under `examples/resume-interrupted-map/`.
+
 ### vs `CLAUDE.md` / `AGENTS.md`
 
 | | Repo handbook | This skill |
@@ -158,9 +175,10 @@ Orient **reads repo rules first**, then runs the flow. Repo rules win over skill
 legacy-delegate/
 ├── SKILL.md          # main protocol (agent entry)
 ├── PLAN.md           # spec, gates, roadmap
-├── examples.md       # fictional walkthrough
+├── examples.md       # fictional walkthrough (+ resume)
+├── examples/         # snapshot artifacts (e.g. resume-interrupted-map)
 ├── templates/        # task / map / change / notes
-├── references/       # bug / feature / refactor / map guides
+├── references/       # bug / feature / refactor / map / resume guides
 └── scripts/
     └── check_delegate_artifacts.sh
 ```

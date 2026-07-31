@@ -64,6 +64,7 @@ flowchart LR
 - **证据分级 L0/L1/L2** — L0 不得宣称完成；L1 可复现；L2 测试/探针
 - **bug / feature / 轻量 refactor** 同一条绳，Change 子策略写死
 - **产物落盘** `.delegate/<task-slug>/` — 人可审、下个 Agent 可续
+- **跨会话续跑** — 同一 slug 接着干；Map 未 complete 仍禁改码
 - **反 stub 检查脚本** — 空章节 / 占位表格直接 FAIL
 - **显式调用** — `disable-model-invocation: true`，小改不会被强行套流程
 
@@ -140,6 +141,22 @@ bash ~/.cursor/skills/legacy-delegate/scripts/check_delegate_artifacts.sh \
 
 你已给出精确文件且自认链路清楚时，可要求 fast path：仍须短 map + 证据 ≥ L1，不能跳过 Leave。
 
+### Resume / 跨会话续跑
+
+若上次对话已留下 `.delegate/<task-slug>/`，直接说：
+
+```text
+用 legacy-delegate：继续 .delegate/checkout-coupon-500
+```
+
+或只说「继续」（Agent 优先接最新的 `in_progress` / `blocked`，否则问你 slug）。
+
+- 同一目录续跑；在 `task.md` 写 `resume: true`、`last_stage`、`resume_from`
+- **未完成闸门仍生效** — Map 未 complete ⇒ 仍禁止改业务代码
+- 中途停手：在 `notes.md` 填 **Handoff for resume**
+
+走通示例：[examples.md](examples.md#resume-interrupted-at-map--new-session) · 快照见 `examples/resume-interrupted-map/`。
+
 ### 和 `CLAUDE.md` / `AGENTS.md` 的区别
 
 | | 仓内说明书 | 本 skill |
@@ -157,9 +174,10 @@ Orient 会**先读**仓规，再跑流程。仓规优先于本 skill 默认习�
 legacy-delegate/
 ├── SKILL.md          # 主流程（Agent 执行入口）
 ├── PLAN.md           # 规格、闸门、路线图
-├── examples.md       # 虚构小仓走通
+├── examples.md       # 虚构小仓走通（含续跑）
+├── examples/         # 产物快照（如 resume-interrupted-map）
 ├── templates/        # task / map / change / notes
-├── references/       # bug / feature / refactor / map 指引
+├── references/       # bug / feature / refactor / map / resume 指引
 └── scripts/
     └── check_delegate_artifacts.sh
 ```

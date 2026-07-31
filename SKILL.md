@@ -3,9 +3,11 @@ name: legacy-delegate
 description: >-
   Auditable legacy-codebase delegation: map long call/data chains before editing,
   then fix bugs or add features with evidence grades, optionally light-refactor,
-  and leave notes for humans and future agent sessions. Use when explicitly
-  invoked for unfamiliar modules, long investigation chains, delegated bugfixes,
-  cross-layer features, or safe refactors that must not skip understanding.
+  and leave notes for humans and future agent sessions. Resumes existing
+  `.delegate/<slug>/` across chats without skipping Map/evidence gates. Use when
+  explicitly invoked for unfamiliar modules, long investigation chains, delegated
+  bugfixes, cross-layer features, resume of a prior delegate task, or safe
+  refactors that must not skip understanding.
 disable-model-invocation: true
 ---
 
@@ -50,29 +52,36 @@ Stop and say so (or set `aborted`) if: typo/copy-only with exact file given; use
 | `check_delegate_artifacts.sh` fails | Fix missing files / section markers / `evidence_grade` | Stay `in_progress`; re-run script before any done claim |
 | Scope grows mid-Change | Stop coding; update Map boundary | **🔴 CHECKPOINT** — get user OK before continuing |
 | Wrong skill fit (see When not to use) | Say so; set `aborted` | Keep artifacts; no further code edits |
+| Prior `.delegate/` found but gates incomplete | Resume same slug; set `resume_from` to first unfinished stage | Never jump to Change on chat memory alone |
+| User says “continue” with no slug | Prefer newest `in_progress`/`blocked`; else ask which slug | Do not invent a parallel folder for the same ask |
 
 ## Workflow checklist
 
 ```
 Progress:
-- [ ] Orient → task.md
+- [ ] Orient → task.md (or resume: read existing .delegate/<slug>/)
 - [ ] Map → map.md (DoD) OR fast_path recorded
 - [ ] Change → code + change.md (evidence ≥ L1)
-- [ ] Leave → notes.md
+- [ ] Leave → notes.md (+ handoff if stopping mid-task)
 - [ ] check_delegate_artifacts.sh passes
 ```
 
 ### 0) Orient
 
-Create `.delegate/<task-slug>/` (`task-slug`: short kebab-case from topic + date if needed).
+**First:** if the target repo has `.delegate/`, check for an existing slug (user-named, or newest `in_progress`/`blocked`). If found → **resume** that folder (read `task.md` → map/change/notes); set `resume: true`, `last_stage`, `resume_from`. Detail: [references/resume-workflow.md](references/resume-workflow.md).
 
-Fill `task.md` from [templates/task.md](templates/task.md):
+Otherwise create `.delegate/<task-slug>/` (`task-slug`: short kebab-case from topic + date if needed).
+
+Fill/update `task.md` from [templates/task.md](templates/task.md):
 
 - type, mode, success criteria
 - `investigate_only` / `fast_path` if applicable
+- resume fields when continuing a prior session
 - Read repo guide files; note build/test commands
 
-**🔴 CHECKPOINT · 🛑 STOP**：If blocked on env/repro/access → set `status: blocked`, list asks, **stop** (no Map/Change).
+**Resume hard rule:** do **not** skip unfinished gates. Map not `complete` (no valid `fast_path`) → still **no** business code edits. `done` tasks are not re-patched; new work → new slug.
+
+**🔴 CHECKPOINT · 🛑 STOP**：If blocked on env/repro/access → set `status: blocked`, list asks, **stop** (no Map/Change). Mid-task stop → fill `notes.md` **Handoff for resume**; do not claim done.
 
 ### 1) Map
 
@@ -156,5 +165,6 @@ Optional: promote stable facts into repo docs **only if user asked**.
 ## Additional resources
 
 - Templates: [templates/](templates/)
+- Resume: [references/resume-workflow.md](references/resume-workflow.md)
 - Plan / full spec: [PLAN.md](PLAN.md)
 - Example walkthrough: [examples.md](examples.md)

@@ -1,8 +1,14 @@
 # legacy-delegate — 计划文档
 
-> 状态：S0–S6 已完成（可用并已开源包装）  
+> 状态：第一期 S0–S6 已完成（可用 + 已开源）；P1 跨会话续跑已落地  
 > 位置：`~/.cursor/skills/legacy-delegate/`  
-> 更新日期：2026-07-30
+> GitHub：https://github.com/Seven-second-fish/legacy-delegate · Demo：cakeshop  
+> **当前下一刀：P2 refactor 完整闸门**（说「做 refactor 闸门」即可开工）  
+> 更新日期：2026-07-31
+
+本文件 = **内部规格 + 路线图 + 待办**。对外入口见 `README.md` / `README.zh-CN.md`。
+
+完成 §6.2 任一项后，必须同步勾选并改文首「当前下一刀」。
 
 ---
 
@@ -101,16 +107,45 @@
 - [x] 使用说明（README）：如何安装、如何触发、Demo 建议
 - [x] 可选：`examples.md` 用一个虚构小仓走通一遍
 
-### 6.2 第二期
+### 6.2 第二期（能力）
 
-- [ ] refactor 完整闸门（表征测试 / 回归清单）
-- [ ] 与 git 历史轻量结合（关键文件 churn，不作纯 git 故事 skill）
-- [ ] 跨会话续跑（读取已有 `.delegate/` 继续）
-- [x] 简单 `scripts/`（如检查 `.delegate/` 是否齐全再允许声明 done）
+执行顺序：P1 → P2 → P3（可与 P2 并行）→ P4（随时可插队）→ P5。
 
-### 6.3 明确不做（第一期）
+#### P1 — 跨会话续跑
 
-- 车载协议 / ARXML / DBC 专项（可作后续垂直插件）
+- [x] Orient：若目标仓已有 `.delegate/<slug>/`，先读再决定从哪一阶段接着
+- [x] `task.md` / `notes.md` 约定续跑字段（如 `resume_from`、`last_stage`）
+- [x] `SKILL.md`：续跑不得跳过未完成闸门；Map 未 complete 仍禁改码
+- [x] 走通「中断于 Map → 新会话续跑」1 次；README 补 Resume 一小段
+
+#### P2 — refactor 完整闸门 ← 当前
+
+- [ ] 扩充 `references/refactor-workflow.md`：表征测试、行为锁、回归清单
+- [ ] Change 模板 refactor 必填段（表征证据、回滚点）；默认证据 ≥ L1
+- [ ] 实仓或小仓跑 1 例轻量 refactor（禁止顺手大优化）
+
+#### P3 — git 历史轻量结合
+
+- [ ] Map 可选附关键触点 churn / 热点作者（只作线索）
+- [ ] 边界：不作纯 git 故事 skill；`map-guidance.md` 加「何时看 git」
+
+#### P4 — 开源曝光与 Demo 资产
+
+- [ ] README Demo GIF / 短录屏（裸改 vs 启 skill）；中英同步
+- [ ] 分享 skills.sh / Cursor 社区；可选第二真实仓 case
+
+#### P5 — 可选打磨
+
+- [ ] 压缩 `SKILL.md`；Darwin dim9 反例（体积可控后再做）
+- [ ] 检查脚本续跑弱校验；可选 `CONTRIBUTING.md`
+
+#### 已落地（原第二期 scripts）
+
+- [x] 简单 `scripts/`（必填文件 + DoD 标记 + 反 stub）
+
+### 6.3 明确不做（保持边界）
+
+- 车载协议 / ARXML / DBC / FIBEX 专项（可另开垂直插件仓）
 - 大型静态分析平台、自动全仓重构
 - 替代团队规范的通用 code review
 - 与 `CLAUDE.md` / `AGENTS.md` 抢「常驻项目说明书」定位（本 skill 是作业流程，非常驻百科）
@@ -123,20 +158,25 @@
 ~/.cursor/skills/legacy-delegate/
 ├── PLAN.md                 # 本计划（已有）
 ├── README.md               # 安装与用法（开源访客入口）
+├── README.zh-CN.md
 ├── LICENSE                 # MIT
 ├── SKILL.md                # 主技能
 ├── templates/
-│   ├── task.md
+│   ├── task.md             # 含 resume / last_stage / resume_from
 │   ├── map.md
 │   ├── change.md
-│   └── notes.md
+│   └── notes.md            # 含 Handoff for resume
 ├── references/
 │   ├── bug-workflow.md
 │   ├── feature-workflow.md
-│   └── refactor-workflow.md
+│   ├── refactor-workflow.md
+│   ├── map-guidance.md
+│   └── resume-workflow.md  # 跨会话续跑
 ├── scripts/
 │   └── check_delegate_artifacts.sh
-└── examples.md
+├── examples.md
+└── examples/
+    └── resume-interrupted-map/   # session-1 draft Map → session-2 续跑
 ```
 
 项目内运行时产物（由 Agent 写入被操作的仓库）：
@@ -222,7 +262,10 @@ description: >
 | S5 | （可选）加强 scripts | ✅ 反 stub / 实质段落检查 2026-07-30 |
 | S6 | （可选）整理为 GitHub 仓库对外开源 | ✅ README 徽章/安装/Demo + MIT LICENSE 2026-07-30 |
 
-**当前：S0–S6 完成；黄金路径已验收（cakeshop）；GitHub：`Seven-second-fish/legacy-delegate`。**
+**第一期：S0–S6 完成；黄金路径已验收（cakeshop）。**  
+**第二期：P1 跨会话续跑 ✅（2026-07-31）；默认下一刀 P2 refactor 完整闸门。**
+
+第二期共用验收：无 Map complete 不改业务代码；禁 L0 宣称 done；完成前跑 check 脚本；对外叙事仍是代工 + 可审计；中英 README 关键段落同步；续跑不得跳过未完成闸门。
 
 ---
 
@@ -312,3 +355,17 @@ Orient 阶段优先阅读（若存在）：`AGENTS.md`、`CLAUDE.md`、`.cursor/
 
 相对「裸 AI 直接改」，本 skill 应降低：漏层改动、无证据宣称修复、老人复审时间。  
 S4 用前后对比各跑 1 个 bug + 1 个 feature 验证。
+
+### 14.9 跨会话续跑（P1）
+
+Orient 若发现目标仓已有 `.delegate/<slug>/`，先读再续，不默认另开 slug。
+
+`task.md` 字段：
+
+- `resume: true|false`  
+- `last_stage`: 上一会话已完成的阶段（`orient` | `map` | `change` | `leave`）  
+- `resume_from`: 本会话应从哪一阶段接着  
+
+`notes.md` 中途停手时填写 **Handoff for resume**。
+
+硬约束与首跑相同：Map 未 `complete` 且无合法 `fast_path` → 禁止改业务代码；不得凭上一聊的记忆跳闸门。细则见 [references/resume-workflow.md](references/resume-workflow.md)；虚构走通见 `examples/resume-interrupted-map/`。

@@ -7,6 +7,9 @@ mode: delegate | onboard
 status: in_progress | investigate_only | blocked | aborted | done
 fast_path: false
 evidence_target: L1 | L2
+resume: false
+last_stage: ""          # orient | map | change | leave — last finished stage
+resume_from: ""         # stage to run next (set when resume: true)
 ```
 
 ## User ask
@@ -21,6 +24,12 @@ evidence_target: L1 | L2
 
 - Reason:
 - User-specified files/symbols:
+
+## Resume (if any)
+
+- Prior artifacts read:
+- Why this `resume_from`:
+- Handoff hint used (from notes.md, if any):
 
 ## Repo guides read
 

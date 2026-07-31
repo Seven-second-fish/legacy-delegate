@@ -36,3 +36,23 @@ Unknown: whether legacy coupons rely on crash for fraud (ask product).
 
 User: “Only change `pricing/coupon.js` null check, I know the path.”  
 → `fast_path: true`, short map, same evidence rules.
+
+---
+
+## Resume: interrupted at Map → new session
+
+Snapshot artifacts: [examples/resume-interrupted-map/](examples/resume-interrupted-map/).
+
+### Session 1 (stops mid-Map)
+
+- Orient done; `map.md` left `status: draft` (path stops at `applyCoupon`; blast radius unknown)
+- `notes.md` **Handoff for resume**: `resume_from: map`; **no business edits until Map complete**
+- `task.md`: `last_stage: orient`, `resume_from: map`, `status: in_progress`
+
+### Session 2 (user: “continue checkout-coupon-500”)
+
+1. Orient **resume**: read same `.delegate/checkout-coupon-500/` (not a new slug)
+2. Set `resume: true`; honor handoff → stay on **Map** (do not jump to Change on chat memory)
+3. Finish Map DoD → `status: complete` → Change (L2) → Leave → checker OK → `status: done`
+
+**Gate check:** Session 2 must not patch while Map is still draft.

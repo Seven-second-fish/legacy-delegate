@@ -16,6 +16,19 @@ status: in_progress | verified | abandoned
 |----|------|
 | | |
 
+## 表征证据（refactor 必填；其他类型写 N/A）
+
+<!-- 改结构前的行为锁：测试名 / 手工基线步骤 / 改前结果 -->
+
+- 锁住的行为：
+- 改前基线（命令或步骤 + 结果）：
+
+## 回滚点（refactor 必填；其他类型写 N/A）
+
+<!-- 如何撤回本改动 -->
+
+-
+
 ## 改动摘要
 
 | 文件 | 改动 |
@@ -43,7 +56,7 @@ status: in_progress | verified | abandoned
 
 ## 证据等级说明
 
--
+- refactor 默认 ≥ L1；有自动化表征测试则 L2
 
 ## 残留风险
 

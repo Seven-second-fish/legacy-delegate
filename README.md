@@ -139,6 +139,12 @@ bash ~/.cursor/skills/legacy-delegate/scripts/check_delegate_artifacts.sh \
 
 你已给出精确文件且自认链路清楚时，可要求 fast path：仍须短 map + 证据 ≥ L1，不能跳过 Leave。
 
+### 轻量 refactor
+
+`type: refactor` 时：先**行为锁**（表征测试或手工基线），再改结构；`change.md` 必填 **表征证据**、**回滚点**；默认证据 ≥ L1。禁止跨模块大改或修 bug 时顺手重构。
+
+走通示例：[examples.md](examples.md#轻量-refactor抽纯函数行为保持) · 快照见 `examples/light-refactor-extract-fn/`。
+
 ### Resume / 跨会话续跑
 
 若上次对话已留下 `.delegate/<task-slug>/`，直接说：

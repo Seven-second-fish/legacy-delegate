@@ -1,9 +1,9 @@
 # legacy-delegate — 计划文档
 
-> 状态：第一期 S0–S6 已完成（可用 + 已开源）；P1 跨会话续跑已落地  
+> 状态：第一期 S0–S6 已完成（可用 + 已开源）；P1–P2 已落地  
 > 位置：`~/.cursor/skills/legacy-delegate/`  
 > GitHub：https://github.com/Seven-second-fish/legacy-delegate · Demo：cakeshop  
-> **当前下一刀：P2 refactor 完整闸门**（说「做 refactor 闸门」即可开工）  
+> **当前下一刀：P3 git 历史轻量结合**（说「做 git 线索」即可开工）  
 > 更新日期：2026-07-31
 
 本文件 = **内部规格 + 路线图 + 待办**。对外入口见 `README.md`（中文）。
@@ -118,13 +118,13 @@
 - [x] `SKILL.md`：续跑不得跳过未完成闸门；Map 未 complete 仍禁改码
 - [x] 走通「中断于 Map → 新会话续跑」1 次；README 补 Resume 一小段
 
-#### P2 — refactor 完整闸门 ← 当前
+#### P2 — refactor 完整闸门
 
-- [ ] 扩充 `references/refactor-workflow.md`：表征测试、行为锁、回归清单
-- [ ] Change 模板 refactor 必填段（表征证据、回滚点）；默认证据 ≥ L1
-- [ ] 实仓或小仓跑 1 例轻量 refactor（禁止顺手大优化）
+- [x] 扩充 `references/refactor-workflow.md`：表征测试、行为锁、回归清单
+- [x] Change 模板 refactor 必填段（表征证据、回滚点）；默认证据 ≥ L1
+- [x] 实仓或小仓跑 1 例轻量 refactor（禁止顺手大优化）
 
-#### P3 — git 历史轻量结合
+#### P3 — git 历史轻量结合 ← 当前
 
 - [ ] Map 可选附关键触点 churn / 热点作者（只作线索）
 - [ ] 边界：不作纯 git 故事 skill；`map-guidance.md` 加「何时看 git」
@@ -175,7 +175,8 @@
 │   └── check_delegate_artifacts.sh
 ├── examples.md
 └── examples/
-    └── resume-interrupted-map/   # session-1 draft Map → session-2 续跑
+    ├── resume-interrupted-map/   # session-1 draft Map → session-2 续跑
+    └── light-refactor-extract-fn/  # 轻量抽函数 + 表征锁
 ```
 
 项目内运行时产物（由 Agent 写入被操作的仓库）：
@@ -259,7 +260,7 @@ description: >
 | S6 | （可选）整理为 GitHub 仓库对外开源 | ✅ README 徽章/安装/Demo + MIT LICENSE 2026-07-30 |
 
 **第一期：S0–S6 完成；黄金路径已验收（cakeshop）。**  
-**第二期：P1 跨会话续跑 ✅（2026-07-31）；默认下一刀 P2 refactor 完整闸门。**
+**第二期：P1 续跑 ✅、P2 refactor 闸门 ✅（2026-07-31）；默认下一刀 P3 git 历史轻量结合。**
 
 第二期共用验收：无 Map complete 不改业务代码；禁 L0 宣称 done；完成前跑 check 脚本；对外叙事仍是代工 + 可审计；对外 README 为中文；续跑不得跳过未完成闸门。
 
@@ -365,3 +366,14 @@ Orient 若发现目标仓已有 `.delegate/<slug>/`，先读再续，不默认�
 `notes.md` 中途停手时填写 **续跑交接**。
 
 硬约束与首跑相同：Map 未 `complete` 且无合法 `fast_path` → 禁止改业务代码；不得凭上一聊的记忆跳闸门。细则见 [references/resume-workflow.md](references/resume-workflow.md)；虚构走通见 `examples/resume-interrupted-map/`。
+
+### 14.10 Refactor 轻量闸门（P2）
+
+`type: refactor` 时：
+
+1. 改结构前须有**行为锁**（表征测试或可复跑手工基线）  
+2. `change.md` 必填 **表征证据**、**回滚点**（检查脚本校验非空壳）  
+3. 默认证据 **≥ L1**；有自动化表征则 L2  
+4. 禁止跨模块大改、修 bug 时顺手重构；范围膨胀须回 Map 并问用户  
+
+细则：[references/refactor-workflow.md](references/refactor-workflow.md)；示例：`examples/light-refactor-extract-fn/`。

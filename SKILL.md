@@ -51,6 +51,8 @@ disable-model-invocation: true
 | 不该用本 skill（见上文） | 说明；设 `aborted` | 保留已有产物；不再改代码 |
 | 已有 `.delegate/` 但闸门未完 | 同一 slug 续跑；`resume_from` 指到第一个未完成阶段 | 禁止仅凭聊天记忆跳进 Change |
 | 用户说「继续」但未给 slug | 优先最新 `in_progress`/`blocked`；否则询问 | 禁止为同一任务另开平行目录 |
+| Refactor 无行为锁 / 无回滚点 | 先补表征证据与回滚点；保持 `in_progress` | 禁止在 L0 或基线未跑通时宣称完成 |
+| Refactor 范围膨胀到跨模块 | 停手；更新 Map；问用户 | 超出轻量 → `aborted` 或拆新任务 |
 
 ## 流程清单
 
@@ -123,6 +125,8 @@ disable-model-invocation: true
 | L2 | 测试或约定日志/探针通过 | 可，优选 |
 
 最小 diff。除非任务类型是 refactor，否则禁止「顺便」重构。
+
+**Refactor：** 遵循 [references/refactor-workflow.md](references/refactor-workflow.md)。改结构前先做**行为锁**（表征测试或手工基线）；`change.md` 必填 **表征证据**、**回滚点**；默认证据 **≥ L1**。
 
 **🔴 检查点**：证据仍为 L0，或脚本检查失败 → **不得**宣称完成；按失败模式表处理。
 

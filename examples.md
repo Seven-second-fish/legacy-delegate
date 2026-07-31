@@ -56,3 +56,16 @@
 3. 补完 Map DoD → `status: complete` → Change（L2）→ Leave → 检查脚本 OK → `status: done`
 
 **闸门核对：** 会话 2 在 Map 仍为 draft 时不得打补丁。
+
+---
+
+## 轻量 refactor：抽纯函数（行为保持）
+
+产物快照：[examples/light-refactor-extract-fn/](examples/light-refactor-extract-fn/)。
+
+1. **Orient**：`type: refactor`；成功标准 = 行为不变 + 表征绿  
+2. **Map**：边界仅 `pricing/coupon.js` 抽 `isCouponExpired`；禁止改折扣公式 / controller  
+3. **Change**：先记 **表征证据**（`npm test -- pricing` 改前绿）与 **回滚点**，再抽函数；改后同套件绿 → `evidence_grade: L2`  
+4. **Leave**：回归命令 + 「勿顺手扩到全仓日期工具」
+
+对照：[references/refactor-workflow.md](references/refactor-workflow.md)。检查脚本在 `type: refactor` 时会校验表征/回滚章节。

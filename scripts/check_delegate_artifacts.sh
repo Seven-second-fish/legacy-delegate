@@ -133,6 +133,8 @@ MAP_UNKNOWNS='未知|Unknowns'
 MAP_PATH='关键路径|Critical path'
 CHG_DIFF='改动摘要|Diff summary'
 CHG_VERIFY='验证|Verification'
+CHG_CHAR='表征证据|Characterization'
+CHG_ROLLBACK='回滚点|Rollback'
 NOTES_WHAT='改了什么|What changed'
 NOTES_REGRESS='如何回归|How to regress'
 TASK_SUCCESS='成功标准|Success criteria'
@@ -171,6 +173,17 @@ if [[ -f "$DIR/change.md" ]]; then
     fi
     require_section_substance "$DIR/change.md" "$CHG_DIFF" "change.md"
     require_section_substance "$DIR/change.md" "$CHG_VERIFY" "change.md"
+    # refactor：表征证据 + 回滚点必填（非空壳）
+    is_refactor=0
+    if grep -qiE '^[[:space:]]*type:[[:space:]]*refactor\b' "$DIR/change.md"; then
+      is_refactor=1
+    elif [[ -f "$DIR/task.md" ]] && grep -qiE '^[[:space:]]*type:[[:space:]]*refactor\b' "$DIR/task.md"; then
+      is_refactor=1
+    fi
+    if [[ "$is_refactor" -eq 1 ]]; then
+      require_section_substance "$DIR/change.md" "$CHG_CHAR" "change.md"
+      require_section_substance "$DIR/change.md" "$CHG_ROLLBACK" "change.md"
+    fi
   fi
 fi
 

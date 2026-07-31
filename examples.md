@@ -1,6 +1,7 @@
 # 示例走通（虚构）
 
-> 真实仓验收见 README「真实 Demo：cakeshop」与 [Seven-second-fish/cakeshop](https://github.com/Seven-second-fish/cakeshop)。下文为虚构走通，便于不依赖环境时理解闸门。
+> 真实仓验收见 README「真实 Demo：cakeshop」与 [Seven-second-fish/cakeshop](https://github.com/Seven-second-fish/cakeshop)。下文为虚构走通，便于不依赖环境时理解闸门。  
+> 第五期动机与**验收追诉**（done 后同控件重开同 slug）见 [PLAN.md §6.7](PLAN.md#67-第五期维护验收闭环与防伪-done)。
 
 仓库：小型 Node 服务。症状：购物车带优惠券时 `POST /checkout` 返回 500。
 
@@ -70,3 +71,16 @@ Git 线索（可选）：对 `pricing/coupon.js` 看最近 log — 仅线索，�
 4. **Leave**：回归命令 + 「勿顺手扩到全仓日期工具」
 
 对照：[references/refactor-workflow.md](references/refactor-workflow.md)。检查脚本在 `type: refactor` 时会校验表征/回滚章节。
+
+---
+
+## 验收追诉：成功标准过窄 → 同 slug 重开
+
+产物快照：[examples/acceptance-reopen-outcome-gap/](examples/acceptance-reopen-outcome-gap/)。
+
+1. **首轮 Orient**：成功标准仅「下拉可展开」→ Change 验证通过 → `status: done`
+2. **用户追诉**：「能开，但点导出没反应」→ **同 slug** 重开，不新开 change 文件
+3. **补成功标准**：追加「点导出 → 下载 JSON」；`change.md` 保留首轮验证，追加 **追诉 #1**（步骤/之前/之后）
+4. **Leave**：`notes.md` **成功标准对照** 表逐条勾证据；未完成项不得宣称 done
+
+对照：[PLAN.md §6.7](PLAN.md#67-第五期维护验收闭环与防伪-done)。

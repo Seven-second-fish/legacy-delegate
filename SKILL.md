@@ -78,11 +78,11 @@ Orient(task.md | 续跑已有 slug) → Map(DoD|fast_path) → Change(≥L1) →
 
 有 `.delegate/` 则先续跑（用户给出的 slug，或 mtime 最新且 `status` 为 `in_progress`/`blocked` 的目录）：读四件套，设 `resume: true`、`last_stage`、`resume_from`（取值仅 `orient|map|change|leave`）。[resume-workflow](references/resume-workflow.md)。
 
-否则新开 slug：`mkdir -p .delegate/<task-slug>/`，拷模板填：`task_slug` `type` `mode` `status` `fast_path` `evidence_target`；成功标准写成可勾选条目；记下仓规构建/测试命令。若仓内已有近邻产物（含 `done`），按 mtime 扫最近 ≤5 个，**只摘**触点列表 + 改动边界（+ 成功标准一行），写入本题 map「假设」或「历史线索」，注明 `source: .delegate/<old-slug>/`，仅作线索 → [warm-start](references/warm-start.md)。路径疑似重叠 → 🔴 CHECKPOINT 问是否参考 / 是否 fast path；未确认前仍做本题 Map。**禁止**自动 `fast_path`；**禁止**复制旧 map 改 status 冒充 complete。新活 → 新 slug；旧 map 过期写入「未知」。
+否则新开 slug：`mkdir -p .delegate/<task-slug>/`，拷模板填：`task_slug` `type` `mode` `status` `fast_path` `evidence_target`；成功标准写成可勾选条目；记下仓规构建/测试命令。若仓内已有近邻产物（含 `done`），按 mtime 扫最近 ≤5 个，**只摘**触点列表 + 改动边界（+ 成功标准一行），写入本题 map「假设」或「历史线索」，注明 `source: .delegate/<old-slug>/`，仅作线索 → [warm-start](references/warm-start.md)。路径疑似重叠 → 🔴 CHECKPOINT 问是否参考 / 是否 fast path；若触点重叠且用户话术像「还是不行」→ 先查是否验收追诉（见 [resume](references/resume-workflow.md)），勿单独开新 slug。未确认前仍做本题 Map。**禁止**自动 `fast_path`；**禁止**复制旧 map 改 status 冒充 complete。新活 → 新 slug；旧 map 过期写入「未知」。
 
 续跑不跳闸门。`done` **默认**不重打补丁（防改写已审证据）；**例外**：验收追诉 → 同 slug 重开并追加证据，见 [resume-workflow §验收追诉](references/resume-workflow.md#验收追诉done-后同控件跟进)。阻塞 → `blocked` 停。中途停 → notes 写满 **续跑交接**。  
 🔴 CHECKPOINT：type / 成功标准不清 → 先问用户，勿猜着进 Map。
-写成功标准时覆盖用户可感知的控件闭环（勿只写「能打开」而把「能选中」留成残留风险后立刻 done）。
+写成功标准时覆盖**用户可观察结果链**（进入可操作态 → 用户意图动作 → 可观察后果）；缺环不得把缺项写成残留风险后立刻 `done`。细则 → [bug-workflow](references/bug-workflow.md)。
 
 ### 1) Map
 
@@ -115,7 +115,9 @@ Map complete 或合法 fast path 后，按类型走 [bug](references/bug-workflo
 1. Map `status: complete`，或 `fast_path: true` + 短 map（触点+边界）  
 2. `evidence_grade: L1|L2` 且验证含 `步骤/前/后`  
 3. notes「改了什么」「如何回归」非空壳  
-4. check 脚本 stdout：`RESULT: OK`
+4. check 脚本 stdout：`RESULT: OK`  
+5. 成功标准已勾选，且每条能指到 change 验证或 ≥L1 证据（禁事后静默删减成功标准圆 done）  
+6. 残留风险若落在未勾选成功标准/主路径关键动作 → 禁 `done`（继续 Change 或 `blocked`）；仅 map 已标范围外者可留在残留
 
 ## 资源
 

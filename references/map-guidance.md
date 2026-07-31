@@ -15,6 +15,8 @@
 
 `HTTP /login` → `AuthController.login` → `SessionService.create` → `RedisStore.set` → 失败于 TTL 配置
 
+**镜像触点**：遗留仓若同规则/样式/配置存在镜像副本（多份 CSS、JSP、配置片段等），触点列表应列齐；改一漏一写入影响面。
+
 ## 差的地图
 
 - 只有目录树倾倒

@@ -226,6 +226,12 @@ Agent 可扫近邻产物，只摘触点/边界作线索（新开 slug）；相�
 Agent Skills 形态；`npx skills add` 可装多端。Cursor 为主要验证环境。
 </details>
 
+<details>
+<summary><b>刚宣称修好的控件「还是不行 / 能开不能选」怎么办？</b></summary>
+
+走**验收追诉**：重开**同一** `.delegate/<slug>/`，在 `change.md` 追加追诉证据；不要当新任务新开 slug。详见 [references/resume-workflow.md](references/resume-workflow.md#验收追诉done-后同控件跟进)。
+</details>
+
 ---
 
 ## 仓库结构

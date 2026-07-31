@@ -99,6 +99,30 @@
         {"name": "suggest_fast_path_or_blacklist", "text": "可建议点名文件走 Fast path，或小活走黑名单退出"},
         {"name": "evidence_ge_l1", "text": "若继续代工则证据 ≥ L1 且完成前 check"}
       ]
+    },
+    {
+      "id": 10,
+      "prompt": "用 legacy-delegate 验收追诉：仓内已有 .delegate/header-city-dropdown/（status=done），上轮成功标准是「顶栏城市下拉能打开」。用户反馈：下拉能开但仍不能选中城市。接着修，别空转。",
+      "expected_output": "同 slug 重开；resume 追诉；change 追加追诉段；禁新开 header-city-select 类 slug",
+      "files": [],
+      "assertions": [
+        {"name": "same_slug_reopen", "text": "继续使用 header-city-dropdown（或用户点名的同一 slug），未新建 header-city-select 等目录"},
+        {"name": "append_change_appeal", "text": "change.md 追加追诉/验收段，未篡改首轮改前/改后记录"},
+        {"name": "resume_appeal_fields", "text": "task.md 设 resume: true、resume_from 为 change 或 leave，status 回到 in_progress"},
+        {"name": "no_new_slug_orient", "text": "未为同控件从零 Orient 或暖启动开新 slug 空转"}
+      ]
+    },
+    {
+      "id": 11,
+      "prompt": "用 legacy-delegate：筛选面板提交后列表不刷新，或 POST 返回后 UI 状态不对。成功标准必须写清用户意图动作与可观察后果，不能只说「面板能打开」或「请求能进页面」。",
+      "expected_output": "成功标准=意图动作+可观察后果；禁窄标准伪 done；残留未勾项不得宣称完成",
+      "files": [],
+      "assertions": [
+        {"name": "success_criteria_result_chain", "text": "map/task 成功标准含意图动作与可观察后果（如选中生效、列表刷新），非仅「能打开/能进页面」"},
+        {"name": "no_narrow_done", "text": "未以「能打开」「请求 200」等窄标准标 done 而主路径仍失败"},
+        {"name": "residual_blocks_done", "text": "notes 若列「不能选中/不刷新」等未勾成功标准残留，不得宣称 done 或须回 change"},
+        {"name": "evidence_covers_intent", "text": "证据覆盖用户意图动作的可观察结果，非仅 UI 可见或 HTTP 可达"}
+      ]
     }
   ]
 }

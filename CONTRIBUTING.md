@@ -10,7 +10,7 @@
    bash scripts/check_delegate_artifacts.sh examples/resume-interrupted-map/session-2
    ```
 2. 若改了模板章节名，同步更新 `scripts/check_delegate_artifacts.sh` 的中英别名。
-3. 对外说明改 `README.md`；路线图与规格改 `PLAN.md`（完成项须勾选并更新文首「当前下一刀」）。
+3. 对外说明改 `README.md`；路线图与规格改 `PLAN.md`（完成项须勾选并更新文首「当前下一刀」）。第五期验收追诉动机见 [PLAN.md §6.7](PLAN.md#67-第五期维护验收闭环与防伪-done)。
 4. PR 说明：动机、改了哪些闸门/模板、如何自测。
 
 ## 欢迎的 PR

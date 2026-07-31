@@ -43,5 +43,15 @@
     "id": 9,
     "prompt": "legacy-delegate 太耗 token 了，但我还是要用它修遗留支付回调偶发重复扣款；别为了省钱乱砍流程。",
     "expected": "守闸门：不以省 token 免 Map/自动 fast_path；可建议点名文件走 Fast path 或黑名单小活退出；仍 Map→Change→Leave 且证据 ≥ L1"
+  },
+  {
+    "id": 10,
+    "prompt": "用 legacy-delegate 验收追诉：仓内已有 .delegate/header-city-dropdown/（status=done），上轮成功标准是「顶栏城市下拉能打开」。用户反馈：下拉能开但仍不能选中城市。接着修，别空转。",
+    "expected": "同 slug 重开 header-city-dropdown；resume: true + resume_from change/leave；change 追加追诉段；禁新开 header-city-select 等 slug 空转 Orient"
+  },
+  {
+    "id": 11,
+    "prompt": "用 legacy-delegate：筛选面板提交后列表不刷新，或 POST 返回后 UI 状态不对。成功标准必须写清用户意图动作与可观察后果，不能只说「面板能打开」或「请求能进页面」。",
+    "expected": "map/task 成功标准=意图动作+可观察后果（如选中/刷新）；禁「能打开/能进页面」窄标准伪 done；notes 残留未勾项不得宣称完成；证据覆盖意图结果"
   }
 ]

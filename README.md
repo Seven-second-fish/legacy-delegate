@@ -63,6 +63,7 @@ flowchart LR
 - **bug / feature / 轻量 refactor** 同一条绳，Change 子策略写死
 - **产物落盘** `.delegate/<task-slug>/` — 人可审、下个 Agent 可续
 - **跨会话续跑** — 同一 slug 接着干；Map 未 complete 仍禁改码
+- **轻量 git 线索** — Map 可对触点附 churn/作者，不作 git 故事
 - **反 stub 检查脚本** — 空章节 / 占位表格直接 FAIL
 - **显式调用** — `disable-model-invocation: true`，小改不会被强行套流程
 
@@ -169,6 +170,8 @@ bash ~/.cursor/skills/legacy-delegate/scripts/check_delegate_artifacts.sh \
 | 何时 | 几乎总在 | 显式调用长链路任务 |
 
 Orient 会**先读**仓规，再跑流程。仓规优先于本 skill 默认习惯。
+
+Map 阶段可对已入触点的文件附可选 **Git 线索**（见 [map-guidance](references/map-guidance.md#何时看-git轻量线索)）；不替代代码链路，也不写入 Map DoD。
 
 ---
 

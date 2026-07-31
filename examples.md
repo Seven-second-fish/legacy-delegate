@@ -19,7 +19,8 @@
 `POST /checkout` → `CheckoutController.handle` → `PricingService.applyCoupon` → `CouponRepo.find` → 读取空 `expiresAt` 时抛错
 
 触点：`pricing/coupon.js`、`checkout/controller.js`  
-边界：只修 PricingService 对空过期时间的处理；不重做购物车。
+边界：只修 PricingService 对空过期时间的处理；不重做购物车。  
+Git 线索（可选）：对 `pricing/coupon.js` 看最近 log — 仅线索，不替代堆栈证实。
 
 ## Change（L2）
 

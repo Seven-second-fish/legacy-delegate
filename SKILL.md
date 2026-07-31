@@ -96,6 +96,8 @@ disable-model-invocation: true
 6. 允许的改动边界（+ 明确非目标）
 7. 信息不齐则列出待用户确认的问题 — 此时**不得** complete
 
+**可选（非 DoD）：** 对已入触点列表的路径附 **Git 线索**（近况 churn / 热点作者），只作上下文；细则见 [references/map-guidance.md](references/map-guidance.md)#何时看-git轻量线索。禁止写成全仓 git 故事，禁止把提交信息当成已证实根因。
+
 **Fast path**：仅当用户给出精确文件/符号 + 意图，并自认链路清楚。在 `task.md` 写 `fast_path: true` + 理由 + 文件列表。仍须写**简版** `map.md`（至少触点 + 边界）。
 
 **仅调查**：完成 Map（+ 可选 notes）；**禁止**改业务代码。

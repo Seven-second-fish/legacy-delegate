@@ -1,9 +1,9 @@
 # legacy-delegate — 计划文档
 
-> 状态：第一期 S0–S6 已完成（可用 + 已开源）；P1–P2 已落地  
+> 状态：第一期 S0–S6 已完成（可用 + 已开源）；P1–P3 已落地  
 > 位置：`~/.cursor/skills/legacy-delegate/`  
 > GitHub：https://github.com/Seven-second-fish/legacy-delegate · Demo：cakeshop  
-> **当前下一刀：P3 git 历史轻量结合**（说「做 git 线索」即可开工）  
+> **当前下一刀：P4 开源曝光与 Demo 资产**（说「做 Demo 曝光」即可开工）  
 > 更新日期：2026-07-31
 
 本文件 = **内部规格 + 路线图 + 待办**。对外入口见 `README.md`（中文）。
@@ -124,12 +124,12 @@
 - [x] Change 模板 refactor 必填段（表征证据、回滚点）；默认证据 ≥ L1
 - [x] 实仓或小仓跑 1 例轻量 refactor（禁止顺手大优化）
 
-#### P3 — git 历史轻量结合 ← 当前
+#### P3 — git 历史轻量结合
 
-- [ ] Map 可选附关键触点 churn / 热点作者（只作线索）
-- [ ] 边界：不作纯 git 故事 skill；`map-guidance.md` 加「何时看 git」
+- [x] Map 可选附关键触点 churn / 热点作者（只作线索）
+- [x] 边界：不作纯 git 故事 skill；`map-guidance.md` 加「何时看 git」
 
-#### P4 — 开源曝光与 Demo 资产
+#### P4 — 开源曝光与 Demo 资产 ← 当前
 
 - [ ] README Demo GIF / 短录屏（裸改 vs 启 skill）
 - [ ] 分享 skills.sh / Cursor 社区；可选第二真实仓 case
@@ -260,7 +260,7 @@ description: >
 | S6 | （可选）整理为 GitHub 仓库对外开源 | ✅ README 徽章/安装/Demo + MIT LICENSE 2026-07-30 |
 
 **第一期：S0–S6 完成；黄金路径已验收（cakeshop）。**  
-**第二期：P1 续跑 ✅、P2 refactor 闸门 ✅（2026-07-31）；默认下一刀 P3 git 历史轻量结合。**
+**第二期：P1–P3 ✅（2026-07-31）；默认下一刀 P4 开源曝光与 Demo 资产。**
 
 第二期共用验收：无 Map complete 不改业务代码；禁 L0 宣称 done；完成前跑 check 脚本；对外叙事仍是代工 + 可审计；对外 README 为中文；续跑不得跳过未完成闸门。
 
@@ -377,3 +377,13 @@ Orient 若发现目标仓已有 `.delegate/<slug>/`，先读再续，不默认�
 4. 禁止跨模块大改、修 bug 时顺手重构；范围膨胀须回 Map 并问用户  
 
 细则：[references/refactor-workflow.md](references/refactor-workflow.md)；示例：`examples/light-refactor-extract-fn/`。
+
+### 14.11 Git 线索（P3，可选）
+
+Map 可在触点列表之外增加 **Git 线索（可选）** 段：对已定位文件记录近况/churn、热点作者。
+
+- **非 DoD**：无 git 或未填不影响 `status: complete`  
+- **只作线索**：不得把 commit message 当已证实根因；不得写成全仓编年史  
+- **边界**：本 skill 不作纯 git 故事 / 技术债报告工具  
+
+命令与「何时看」见 [references/map-guidance.md](references/map-guidance.md)。

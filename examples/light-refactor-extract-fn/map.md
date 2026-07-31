@@ -26,6 +26,12 @@ fast_path: false
 
 - `CheckoutController` / `PreviewController` 经 `applyCoupon`；不改签名则无调用方改动
 
+## Git 线索（可选）
+
+| 路径 | 近况 / churn | 热点作者（线索） |
+|------|--------------|------------------|
+| `pricing/coupon.js` | 近 10 提交多为定价/券逻辑；非全仓热点 | 仅作「可能知情」；不问责 |
+
 ## 已证实
 
 - 过期判断仅在 `applyCoupon` 内联出现一处

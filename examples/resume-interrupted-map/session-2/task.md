@@ -1,4 +1,4 @@
-# Task
+# 任务
 
 ```yaml
 task_slug: checkout-coupon-500
@@ -12,36 +12,36 @@ last_stage: leave
 resume_from: ""
 ```
 
-## User ask
+## 用户诉求
 
-`POST /checkout` returns 500 when the cart has a coupon. Map first, then fix.
+`POST /checkout` 在购物车带优惠券时返回 500。先摸清再修。
 
-## Success criteria
+## 成功标准
 
-- [x] HTTP 200 + discounted total (no 500)
-- [x] Automated test covers null/missing coupon expiry
+- [x] HTTP 200 + 折扣后总额（不再 500）
+- [x] 自动化测试覆盖空/缺失优惠券过期时间
 
-## Fast path (if any)
+## Fast path（如有）
 
-- Reason: N/A
-- User-specified files/symbols:
+- 理由：N/A
+- 用户指定的文件/符号：
 
-## Resume (if any)
+## 续跑（如有）
 
-- Prior artifacts read: session-1 `task.md` / `map.md` (draft) / `notes.md` handoff
-- Why this `resume_from`: handoff said `map`; Map was not complete
-- Handoff hint used (from notes.md, if any): finish Map DoD; no code until complete
+- 已读的既有产物：会话 1 的 `task.md` / `map.md`（draft）/ `notes.md` 交接
+- 为何设此 `resume_from`：交接写明 `map`；Map 尚未 complete
+- 使用的交接提示：先补完 Map DoD；complete 前不改代码
 
-## Repo guides read
+## 已读仓规
 
 - [x] README — `npm test`
-- Build: N/A
-- Test: `npm test -- checkout`
+- 构建：N/A
+- 测试：`npm test -- checkout`
 
-## Blockers / asks for user
+## 阻塞 / 需用户补充
 
 -
 
-## Notes
+## 备注
 
-- Session 2 resumed from Map; completed Map → Change (L2) → Leave.
+- 会话 2 从 Map 续跑；完成 Map → Change（L2）→ Leave。

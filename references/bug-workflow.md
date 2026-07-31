@@ -1,9 +1,9 @@
-# Bug workflow
+# Bug 流程
 
-1. Reproduce or get user-confirmed repro; if impossible → `blocked` (do not patch blindly).
-2. From Map, pick ranked hypotheses (falsifiable).
-3. Test cheapest hypothesis first (log read, bisect, focused test).
-4. Apply **minimal** patch inside change boundary.
-5. Re-run repro; record before/after in `change.md`.
-6. Evidence: L1 minimum; add/adjust test when feasible → L2.
-7. If root cause unclear after reasonable tries: document unknowns, ask user, do not claim done.
+1. 复现，或取得用户确认的复现；做不到 → `blocked`（禁止瞎改）。
+2. 从 Map 选出可证伪的假设并排序。
+3. 先测成本最低的假设（读日志、二分、定向测试）。
+4. 在改动边界内打**最小**补丁。
+5. 再跑复现；在 `change.md` 记录前后对比。
+6. 证据至少 L1；能加/改测试则冲 L2。
+7. 合理尝试后根因仍不清：写明未知，问用户，不宣称完成。

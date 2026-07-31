@@ -6,7 +6,7 @@
 > **当前下一刀：P2 refactor 完整闸门**（说「做 refactor 闸门」即可开工）  
 > 更新日期：2026-07-31
 
-本文件 = **内部规格 + 路线图 + 待办**。对外入口见 `README.md` / `README.zh-CN.md`。
+本文件 = **内部规格 + 路线图 + 待办**。对外入口见 `README.md`（中文）。
 
 完成 §6.2 任一项后，必须同步勾选并改文首「当前下一刀」。
 
@@ -131,7 +131,7 @@
 
 #### P4 — 开源曝光与 Demo 资产
 
-- [ ] README Demo GIF / 短录屏（裸改 vs 启 skill）；中英同步
+- [ ] README Demo GIF / 短录屏（裸改 vs 启 skill）
 - [ ] 分享 skills.sh / Cursor 社区；可选第二真实仓 case
 
 #### P5 — 可选打磨
@@ -157,15 +157,14 @@
 ```text
 ~/.cursor/skills/legacy-delegate/
 ├── PLAN.md                 # 本计划（已有）
-├── README.md               # 安装与用法（开源访客入口）
-├── README.zh-CN.md
+├── README.md               # 安装与用法（中文，开源访客入口）
 ├── LICENSE                 # MIT
 ├── SKILL.md                # 主技能
 ├── templates/
 │   ├── task.md             # 含 resume / last_stage / resume_from
 │   ├── map.md
 │   ├── change.md
-│   └── notes.md            # 含 Handoff for resume
+│   └── notes.md            # 含续跑交接
 ├── references/
 │   ├── bug-workflow.md
 │   ├── feature-workflow.md
@@ -198,12 +197,9 @@
 ```yaml
 name: legacy-delegate
 description: >
-  Auditable legacy-codebase delegation workflow: map long call/data chains
-  before changing code, then fix bugs, add features, or refactor with evidence,
-  and leave notes for humans and future agent sessions. Use when inheriting
-  unfamiliar code, handing long investigation chains to AI, fixing bugs in
-  legacy modules, adding features across many layers, or safely refactoring
-  without skipping understanding.
+  可审计的遗留仓代工：先摸清长调用/数据链路再改代码，按证据等级修 bug / 加功能 /
+  轻量重构，并留下给人与后续 Agent 可读的笔记。支持跨会话续跑。在显式调用、陌生
+  模块、长链路排查、代修 bug、跨层加功能或不允许跳过理解的安全重构时使用。
 ```
 
 - **MVP：`disable-model-invocation: true`** —— 仅用户显式调用（`/legacy-delegate` 或点名 skill），避免小改被强行套流程。
@@ -265,7 +261,7 @@ description: >
 **第一期：S0–S6 完成；黄金路径已验收（cakeshop）。**  
 **第二期：P1 跨会话续跑 ✅（2026-07-31）；默认下一刀 P2 refactor 完整闸门。**
 
-第二期共用验收：无 Map complete 不改业务代码；禁 L0 宣称 done；完成前跑 check 脚本；对外叙事仍是代工 + 可审计；中英 README 关键段落同步；续跑不得跳过未完成闸门。
+第二期共用验收：无 Map complete 不改业务代码；禁 L0 宣称 done；完成前跑 check 脚本；对外叙事仍是代工 + 可审计；对外 README 为中文；续跑不得跳过未完成闸门。
 
 ---
 
@@ -366,6 +362,6 @@ Orient 若发现目标仓已有 `.delegate/<slug>/`，先读再续，不默认�
 - `last_stage`: 上一会话已完成的阶段（`orient` | `map` | `change` | `leave`）  
 - `resume_from`: 本会话应从哪一阶段接着  
 
-`notes.md` 中途停手时填写 **Handoff for resume**。
+`notes.md` 中途停手时填写 **续跑交接**。
 
 硬约束与首跑相同：Map 未 `complete` 且无合法 `fast_path` → 禁止改业务代码；不得凭上一聊的记忆跳闸门。细则见 [references/resume-workflow.md](references/resume-workflow.md)；虚构走通见 `examples/resume-interrupted-map/`。

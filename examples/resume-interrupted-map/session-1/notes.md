@@ -1,37 +1,37 @@
-# Notes
+# 笔记
 
 ```yaml
 task_slug: checkout-coupon-500
 type: bug
 ```
 
-## What changed
+## 改了什么
 
-- No business code. Orient done; Map draft only.
+- 未改业务代码。Orient 完成；Map 仅为 draft。
 
-## How to regress
+## 如何回归
 
-1. N/A until Change
+1. Change 完成前 N/A
 
-## For next human / agent
+## 给下一位人 / Agent
 
-- Continue same slug `checkout-coupon-500`. Finish Map DoD before any patch.
+- 继续同一 slug `checkout-coupon-500`。打补丁前先补完 Map DoD。
 
-## Handoff for resume
+## 续跑交接
 
-- Done so far: Orient complete; Map has entry + partial path into `PricingService.applyCoupon`
-- Next stage (`resume_from`): `map`
-- Open questions / blockers: need CouponRepo / expiry handling; blast radius of `applyCoupon`
-- Do **not** edit business code until: `map.md` `status: complete` (or valid fast_path)
+- 目前已完成：Orient 完成；Map 有入口 + 部分路径到 `PricingService.applyCoupon`
+- 下一阶段（`resume_from`）：`map`
+- 待确认问题 / 阻塞：需追 CouponRepo / 过期处理；`applyCoupon` 影响面
+- **禁止**改业务代码，直到：`map.md` `status: complete`（或合法 fast_path）
 
-## Unknowns left
+## 仍未知
 
-- Exact throw site; whether null expiry is intentional
+- 精确抛错点；空过期是否故意
 
-## Follow-ups
+## 后续
 
 -
 
-## Doc updates (only if requested)
+## 文档更新（仅当用户要求）
 
 - N/A

@@ -1,21 +1,21 @@
-# Refactor workflow (MVP: light only)
+# Refactor 流程（MVP：仅轻量）
 
-## Allowed in MVP
+## MVP 允许
 
-- Extract function, rename local, dedupe within mapped boundary
-- Move code only with clear callers updated in the same change
-- Add characterization tests **before** behavior-preserving edits when tests missing
+- 在已映射边界内：抽函数、局部重命名、去重
+- 移动代码时，同一改动内更新明确调用方
+- 缺测试时，行为保持型改动前先补**表征测试**
 
-## Not in MVP (defer / ask user)
+## MVP 不做（推迟 / 问用户）
 
-- Cross-module redesign, layer swaps, dependency inversion campaigns
-- “Improve everything” while fixing a bug
-- Refactors without regression plan
+- 跨模块重设计、换层、依赖倒置运动
+- 修 bug 时「顺便把一切变好」
+- 没有回归计划的重构
 
-## Steps
+## 步骤
 
-1. Map boundary + regression plan (even if manual)
-2. Lock behavior (test or checklist)
-3. Small commits/steps mentally: one intention per diff hunk group
-4. Re-run regression; evidence ≥ L1
-5. If scope grows → stop, update Map, get confirmation
+1. Map 边界 + 回归计划（手工亦可）
+2. 锁住行为（测试或检查清单）
+3. 小步推进：一组 diff 一个意图
+4. 重跑回归；证据 ≥ L1
+5. 范围膨胀 → 停手，更新 Map，取得确认

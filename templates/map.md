@@ -1,53 +1,53 @@
-# Map
+# 地图
 
 ```yaml
 status: draft | complete
 fast_path: false
 ```
 
-## Entries
+## 入口
 
 -
 
-## Critical path
+## 关键路径
 
 1.
 2.
 
-## Touch list (files / symbols)
+## 触点列表（文件 / 符号）
 
-| Path | Symbol | Why |
-|------|--------|-----|
+| 路径 | 符号 | 原因 |
+|------|------|------|
 | | | |
 
-## Blast radius
+## 影响面
 
 -
 
-## Confirmed
+## 已证实
 
 -
 
-## Hypotheses
+## 假设
 
 -
 
-## Unknowns
+## 未知
 
 -
 
-## Change boundary
+## 改动边界
 
-**Allowed:**
-
--
-
-**Do not touch:**
+**允许：**
 
 -
 
-## Open questions
+**禁止动：**
 
 -
 
-<!-- DoD: all sections above filled meaningfully; status=complete only then -->
+## 待确认问题
+
+-
+
+<!-- DoD：以上章节均有实质内容后，才可将 status=complete -->

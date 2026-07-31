@@ -1,4 +1,4 @@
-# Task
+# 任务
 
 ```yaml
 task_slug: checkout-coupon-500
@@ -12,36 +12,36 @@ last_stage: orient
 resume_from: map
 ```
 
-## User ask
+## 用户诉求
 
-`POST /checkout` returns 500 when the cart has a coupon. Map first, then fix.
+`POST /checkout` 在购物车带优惠券时返回 500。先摸清再修。
 
-## Success criteria
+## 成功标准
 
-- [ ] HTTP 200 + discounted total (no 500)
-- [ ] Automated test covers null/missing coupon expiry
+- [ ] HTTP 200 + 折扣后总额（不再 500）
+- [ ] 自动化测试覆盖空/缺失优惠券过期时间
 
-## Fast path (if any)
+## Fast path（如有）
 
-- Reason: N/A
-- User-specified files/symbols:
+- 理由：N/A
+- 用户指定的文件/符号：
 
-## Resume (if any)
+## 续跑（如有）
 
-- Prior artifacts read: N/A (first session)
-- Why this `resume_from`: N/A
-- Handoff hint used (from notes.md, if any): N/A
+- 已读的既有产物：N/A（首会话）
+- 为何设此 `resume_from`：N/A
+- 使用的交接提示：N/A
 
-## Repo guides read
+## 已读仓规
 
 - [x] README — `npm test`
-- Build: N/A
-- Test: `npm test -- checkout`
+- 构建：N/A
+- 测试：`npm test -- checkout`
 
-## Blockers / asks for user
+## 阻塞 / 需用户补充
 
 -
 
-## Notes
+## 备注
 
-- Session 1 stopped mid-Map (context limit). Handoff in notes.md.
+- 会话 1 因上下文停在 Map 半程。交接见 notes.md。

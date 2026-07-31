@@ -1,39 +1,39 @@
-# Notes
+# 笔记
 
 ```yaml
 task_slug: ""
 type: bug | feature | refactor
 ```
 
-## What changed
+## 改了什么
 
 -
 
-## How to regress
+## 如何回归
 
 1.
 
-## For next human / agent
+## 给下一位人 / Agent
 
 -
 
-## Handoff for resume
+## 续跑交接
 
-<!-- Fill when stopping mid-task; leave N/A if done -->
+<!-- 中途停手时填写；已完成则写 N/A -->
 
-- Done so far:
-- Next stage (`resume_from`):
-- Open questions / blockers:
-- Do **not** edit business code until:
+- 目前已完成：
+- 下一阶段（`resume_from`）：
+- 待确认问题 / 阻塞：
+- **禁止**改业务代码，直到：
 
-## Unknowns left
-
--
-
-## Follow-ups
+## 仍未知
 
 -
 
-## Doc updates (only if requested)
+## 后续
+
+-
+
+## 文档更新（仅当用户要求）
 
 -

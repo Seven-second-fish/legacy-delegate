@@ -1,170 +1,167 @@
 ---
 name: legacy-delegate
 description: >-
-  Auditable legacy-codebase delegation: map long call/data chains before editing,
-  then fix bugs or add features with evidence grades, optionally light-refactor,
-  and leave notes for humans and future agent sessions. Resumes existing
-  `.delegate/<slug>/` across chats without skipping Map/evidence gates. Use when
-  explicitly invoked for unfamiliar modules, long investigation chains, delegated
-  bugfixes, cross-layer features, resume of a prior delegate task, or safe
-  refactors that must not skip understanding.
+  可审计的遗留仓代工：先摸清长调用/数据链路再改代码，按证据等级修 bug / 加功能 / 轻量重构，
+  并留下给人与后续 Agent 可读的笔记。支持跨会话续跑已有 `.delegate/<slug>/`，且不得跳过
+  Map/证据闸门。在显式调用、陌生模块、长链路排查、代修 bug、跨层加功能、续跑上次代工、
+  或不允许跳过理解的安全重构时使用。
 disable-model-invocation: true
 ---
 
-# Legacy Delegate
+# Legacy Delegate（遗留仓可审计代工）
 
-Protocol for **unfamiliar-AI** work on long chains: Orient → Map → Change → Leave.  
-Gates are **protocol + optional script**, not kernel enforcement.
+给**不熟项目的 AI**在长链路上用的协议：Orient → Map → Change → Leave。  
+闸门是**协议 + 可选脚本**，不是内核强制。
 
-## Hard rules
+## 硬规则
 
-1. Write artifacts under `.delegate/<task-slug>/` in the **target repo**.
-2. Do **not** edit business code until Map is `complete`, unless Fast path (§) or `investigate_only`.
-3. Never claim **done** at evidence **L0**. Prefer L2; L1 allowed if documented.
-4. Obey repo rules first: `AGENTS.md`, `CLAUDE.md`, `.cursor/rules`, README build/test.
-5. No secrets in artifacts. Suggest `.delegate/` in `.gitignore`.
-6. Before claiming done, run: `bash <this-skill>/scripts/check_delegate_artifacts.sh .delegate/<task-slug>`
+1. 产物写在**目标仓**的 `.delegate/<task-slug>/`。
+2. Map 未 `complete` 前**禁止**改业务代码（Fast path 或 `investigate_only` 除外）。
+3. 证据为 **L0** 时**不得**宣称 done。优先 L2；有记录可用 L1。
+4. 仓规优先：`AGENTS.md`、`CLAUDE.md`、`.cursor/rules`、README 的构建/测试说明。
+5. 产物禁止写入密钥。建议把 `.delegate/` 加入 `.gitignore`。
+6. 宣称完成前运行：`bash <本 skill>/scripts/check_delegate_artifacts.sh .delegate/<task-slug>`
 
-Copy templates from [templates/](templates/) into the task dir; fill them (**no empty stubs**). `map.md` `status: complete` only when every DoD section has real content (not placeholder `-` / empty tables).
+从 [templates/](templates/) 拷到任务目录后填满（**禁止空壳占位**）。仅当 Map 各 DoD 段都有实质内容时，才可将 `map.md` 标为 `status: complete`（不能是占位 `-` / 空表）。
 
-## Modes
+## 模式
 
-| Mode | Default | Style |
-|------|---------|-------|
-| `delegate` | yes | Short verdict + evidence + risks + unknowns |
-| `onboard` | no | Same structure, more “why” for newcomers |
+| 模式 | 默认 | 风格 |
+|------|------|------|
+| `delegate` | 是 | 短结论 + 证据 + 风险 + 未知 |
+| `onboard` | 否 | 同结构，多写「为什么」，方便新人 |
 
-Task types: `bug` | `feature` | `refactor` (MVP: refactor = **light only**, see [references/refactor-workflow.md](references/refactor-workflow.md)).
+任务类型：`bug` | `feature` | `refactor`（MVP：refactor 仅**轻量**，见 [references/refactor-workflow.md](references/refactor-workflow.md)）。
 
-## When not to use
+## 何时不该用
 
-Stop and say so (or set `aborted`) if: typo/copy-only with exact file given; user wants explanation only; user already has a full patch to apply; issue needs debugger/prod signals unavailable → `blocked`.
+遇到下列情况应停下并说明（或设 `aborted`）：纯 typo/文案且已指定文件；用户只要解释；已有完整补丁只需代粘贴；必须 debugger/线上观测才能定位且当前取不到证 → `blocked`。
 
-## Failure modes (if X → Y)
+## 失败模式（若 X → Y）
 
-| Trigger | First fix | Still failing → fallback |
-|---------|-----------|--------------------------|
-| Env / repro / access missing | Set `task.md` `status: blocked`; list exact asks | **🛑 STOP** — no business edits; wait for user |
-| Map DoD incomplete (unknowns block the fix) | Fill Open questions; keep `map.md` `status: draft` | **🔴 CHECKPOINT** — ask user; do **not** enter Change |
-| User asserts chain clear + exact files | Set `fast_path: true` + reason + file list; short `map.md` | If files/intent vague → refuse fast path; do full Map |
-| Cannot reproduce bug | Ask for repro or user-confirmed steps | `blocked` or keep investigating; **never** patch at L0 and claim done |
-| Patch tried, still fails / root cause unclear | Record attempts in `change.md`; revise hypotheses from Map | Document unknowns; ask user; do not claim done |
-| `check_delegate_artifacts.sh` fails | Fix missing files / section markers / `evidence_grade` | Stay `in_progress`; re-run script before any done claim |
-| Scope grows mid-Change | Stop coding; update Map boundary | **🔴 CHECKPOINT** — get user OK before continuing |
-| Wrong skill fit (see When not to use) | Say so; set `aborted` | Keep artifacts; no further code edits |
-| Prior `.delegate/` found but gates incomplete | Resume same slug; set `resume_from` to first unfinished stage | Never jump to Change on chat memory alone |
-| User says “continue” with no slug | Prefer newest `in_progress`/`blocked`; else ask which slug | Do not invent a parallel folder for the same ask |
+| 触发 | 先做什么 | 仍失败 → 兜底 |
+|------|----------|----------------|
+| 缺环境 / 复现 / 权限 | `task.md` 设 `status: blocked`；列出精确诉求 | **🛑 停止** — 不改业务代码；等用户 |
+| Map DoD 不完整（未知挡住修复） | 填待确认问题；`map.md` 保持 `status: draft` | **🔴 检查点** — 问用户；**禁止**进入 Change |
+| 用户断言链路清楚且给出精确文件 | `fast_path: true` + 理由 + 文件列表；写短 `map.md` | 文件/意图模糊 → 拒绝 fast path；走完整 Map |
+| 无法复现 bug | 要复现步骤或用户确认的复现 | `blocked` 或继续查；**禁止**在 L0 打补丁并宣称完成 |
+| 已打补丁仍失败 / 根因不清 | 在 `change.md` 记录尝试；按 Map 假设修订 | 写明未知；问用户；不宣称完成 |
+| `check_delegate_artifacts.sh` 失败 | 补齐文件 / 章节标记 / `evidence_grade` | 保持 `in_progress`；宣称完成前重跑脚本 |
+| Change 中途范围膨胀 | 停手改码；更新 Map 边界 | **🔴 检查点** — 获用户同意后再继续 |
+| 不该用本 skill（见上文） | 说明；设 `aborted` | 保留已有产物；不再改代码 |
+| 已有 `.delegate/` 但闸门未完 | 同一 slug 续跑；`resume_from` 指到第一个未完成阶段 | 禁止仅凭聊天记忆跳进 Change |
+| 用户说「继续」但未给 slug | 优先最新 `in_progress`/`blocked`；否则询问 | 禁止为同一任务另开平行目录 |
 
-## Workflow checklist
+## 流程清单
 
 ```
-Progress:
-- [ ] Orient → task.md (or resume: read existing .delegate/<slug>/)
-- [ ] Map → map.md (DoD) OR fast_path recorded
-- [ ] Change → code + change.md (evidence ≥ L1)
-- [ ] Leave → notes.md (+ handoff if stopping mid-task)
-- [ ] check_delegate_artifacts.sh passes
+进度：
+- [ ] Orient → task.md（或续跑：先读已有 .delegate/<slug>/）
+- [ ] Map → map.md（DoD）或已记录 fast_path
+- [ ] Change → 代码 + change.md（证据 ≥ L1）
+- [ ] Leave → notes.md（中途停手则写续跑交接）
+- [ ] check_delegate_artifacts.sh 通过
 ```
 
 ### 0) Orient
 
-**First:** if the target repo has `.delegate/`, check for an existing slug (user-named, or newest `in_progress`/`blocked`). If found → **resume** that folder (read `task.md` → map/change/notes); set `resume: true`, `last_stage`, `resume_from`. Detail: [references/resume-workflow.md](references/resume-workflow.md).
+**先做：** 若目标仓有 `.delegate/`，查找已有 slug（用户指定，或最新 `in_progress`/`blocked`）。找到则**续跑**该目录（读 `task.md` → map/change/notes）；设 `resume: true`、`last_stage`、`resume_from`。细则：[references/resume-workflow.md](references/resume-workflow.md)。
 
-Otherwise create `.delegate/<task-slug>/` (`task-slug`: short kebab-case from topic + date if needed).
+否则新建 `.delegate/<task-slug>/`（`task-slug`：主题短横线命名，必要时加日期）。
 
-Fill/update `task.md` from [templates/task.md](templates/task.md):
+按 [templates/task.md](templates/task.md) 填写/更新 `task.md`：
 
-- type, mode, success criteria
-- `investigate_only` / `fast_path` if applicable
-- resume fields when continuing a prior session
-- Read repo guide files; note build/test commands
+- 类型、模式、成功标准
+- 适用时写 `investigate_only` / `fast_path`
+- 续跑时写 resume 字段
+- 阅读仓规；记下构建/测试命令
 
-**Resume hard rule:** do **not** skip unfinished gates. Map not `complete` (no valid `fast_path`) → still **no** business code edits. `done` tasks are not re-patched; new work → new slug.
+**续跑硬规则：** 不得跳过未完成闸门。Map 未 `complete`（且无合法 `fast_path`）→ 仍**禁止**改业务代码。`done` 任务不再重打补丁；新活开新 slug。
 
-**🔴 CHECKPOINT · 🛑 STOP**：If blocked on env/repro/access → set `status: blocked`, list asks, **stop** (no Map/Change). Mid-task stop → fill `notes.md` **Handoff for resume**; do not claim done.
+**🔴 检查点 · 🛑 停止**：因环境/复现/权限阻塞 → 设 `status: blocked`，列出诉求，**停止**（不进 Map/Change）。中途停手 → 填 `notes.md` **续跑交接**；不宣称完成。
 
 ### 1) Map
 
-Fill `map.md` from [templates/map.md](templates/map.md).
+按 [templates/map.md](templates/map.md) 填写 `map.md`。
 
-**Map DoD** (`status: complete` only if all present):
+**Map DoD**（全部具备才可 `status: complete`）：
 
-1. Relevant entries (API/CLI/callback/consumer/…)
-2. Critical path to suspect or change points
-3. Touch list (files/symbols)
-4. Blast radius
-5. Confirmed / Hypotheses / Unknowns
-6. Allowed change boundary (+ explicit non-goals)
-7. Open questions for user if incomplete — then **not** complete
+1. 相关入口（API/CLI/回调/消费者/…）
+2. 到可疑点或改动点的关键路径
+3. 触点列表（文件/符号）
+4. 影响面
+5. 已证实 / 假设 / 未知
+6. 允许的改动边界（+ 明确非目标）
+7. 信息不齐则列出待用户确认的问题 — 此时**不得** complete
 
-**Fast path**: only if user gave exact files/symbols + intent and asserts chain is clear. Set `fast_path: true` + reason + file list in `task.md`. Still write a **short** `map.md` (touch list + boundary).
+**Fast path**：仅当用户给出精确文件/符号 + 意图，并自认链路清楚。在 `task.md` 写 `fast_path: true` + 理由 + 文件列表。仍须写**简版** `map.md`（至少触点 + 边界）。
 
-**Investigate-only**: complete Map (+ optional notes); **no** business code edits.
+**仅调查**：完成 Map（+ 可选 notes）；**禁止**改业务代码。
 
-**🔴 CHECKPOINT · 🛑 STOP**：Do **not** start Change until Map is `complete` **or** valid `fast_path` is recorded. If Open questions remain → ask user and wait.
+**🔴 检查点 · 🛑 停止**：Map 未 `complete` 且无合法 `fast_path` 前，**禁止**开始 Change。仍有待确认问题 → 问用户并等待。
 
-Detail tips: [references/map-guidance.md](references/map-guidance.md).
+细节：[references/map-guidance.md](references/map-guidance.md)。
 
 ### 2) Change
 
-Require Map `complete` (or valid fast path). Then:
+要求 Map 已 `complete`（或合法 fast path）。然后：
 
-| Type | Follow |
-|------|--------|
+| 类型 | 遵循 |
+|------|------|
 | bug | [references/bug-workflow.md](references/bug-workflow.md) |
 | feature | [references/feature-workflow.md](references/feature-workflow.md) |
 | refactor | [references/refactor-workflow.md](references/refactor-workflow.md) |
 
-Fill `change.md` from [templates/change.md](templates/change.md).
+按 [templates/change.md](templates/change.md) 填写 `change.md`。
 
-**Evidence grades**
+**证据等级**
 
-| Grade | Meaning | Claim done? |
-|-------|---------|-------------|
-| L0 | Reasoning only | **No** |
-| L1 | Repro steps (or user-confirmed) + before/after | Yes, note no automation |
-| L2 | Tests or agreed log/probe checks pass | Yes, preferred |
+| 等级 | 含义 | 可宣称完成？ |
+|------|------|--------------|
+| L0 | 仅推理 | **否** |
+| L1 | 可复现步骤（或用户确认）+ 前后对比 | 可，须注明尚无自动化 |
+| L2 | 测试或约定日志/探针通过 | 可，优选 |
 
-Minimal diffs. Do not “while we’re here” refactor unless type is refactor.
+最小 diff。除非任务类型是 refactor，否则禁止「顺便」重构。
 
-**🔴 CHECKPOINT**：If evidence is still L0, or script check fails → **do not** claim done; follow Failure modes table.
+**🔴 检查点**：证据仍为 L0，或脚本检查失败 → **不得**宣称完成；按失败模式表处理。
 
 ### 3) Leave
 
-Fill `notes.md` from [templates/notes.md](templates/notes.md): what changed, how to regress, unknowns, follow-ups.  
-Optional: promote stable facts into repo docs **only if user asked**.
+按 [templates/notes.md](templates/notes.md) 填写 `notes.md`：改了什么、如何回归、未知、后续。  
+可选：仅当用户要求时，把稳定事实写入仓内正式文档。
 
-## Human reply shape
+## 对人回复形态
 
 **delegate**
 
 ```markdown
-## Verdict
+## 结论
 ...
-## Evidence (L1|L2)
+## 证据 (L1|L2)
 ...
-## Risks / Unknowns
+## 风险 / 未知
 ...
-## Artifacts
+## 产物
 `.delegate/<task-slug>/`
 ```
 
-**onboard**: same headings + short “Why this path” under Verdict; in `map.md` Critical path, add **one role sentence per hop**.
+**onboard**：同样标题；在「结论」下短写「为何走这条路径」；`map.md` 关键路径每一跳加**一句角色说明**。
 
-## Done gate (before claiming done)
+## 完成闸门（宣称完成前）
 
-1. Map `complete` **or** valid `fast_path` + short map (touch list + boundary)
-2. `change.md` has `evidence_grade: L1` or `L2` with steps / before / after filled
-3. `notes.md` has regress steps (not empty)
-4. `bash <this-skill>/scripts/check_delegate_artifacts.sh .delegate/<task-slug>` → `RESULT: OK`
+1. Map `complete`，或合法 `fast_path` + 短 map（触点 + 边界）
+2. `change.md` 有 `evidence_grade: L1` 或 `L2`，且步骤 / 前 / 后已填
+3. `notes.md` 有回归步骤（非空）
+4. `bash <本 skill>/scripts/check_delegate_artifacts.sh .delegate/<task-slug>` → `RESULT: OK`
 
-## Scripts
+## 脚本
 
-- [scripts/check_delegate_artifacts.sh](scripts/check_delegate_artifacts.sh) — required files, DoD markers, L1/L2, and **naive anti-stub** (empty sections / placeholder tables fail). Still does **not** fully judge content quality.
+- [scripts/check_delegate_artifacts.sh](scripts/check_delegate_artifacts.sh) — 必填文件、DoD 标记、L1/L2、**朴素反 stub**（空章节/占位表失败）。仍**不能**完全判断内容质量。
 
-## Additional resources
+## 更多资源
 
-- Templates: [templates/](templates/)
-- Resume: [references/resume-workflow.md](references/resume-workflow.md)
-- Plan / full spec: [PLAN.md](PLAN.md)
-- Example walkthrough: [examples.md](examples.md)
+- 模板：[templates/](templates/)
+- 续跑：[references/resume-workflow.md](references/resume-workflow.md)
+- 计划 / 完整规格：[PLAN.md](PLAN.md)
+- 示例走通：[examples.md](examples.md)

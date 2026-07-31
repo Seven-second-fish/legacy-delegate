@@ -1,4 +1,4 @@
-# Task
+# 任务
 
 ```yaml
 task_slug: ""
@@ -8,39 +8,39 @@ status: in_progress | investigate_only | blocked | aborted | done
 fast_path: false
 evidence_target: L1 | L2
 resume: false
-last_stage: ""          # orient | map | change | leave — last finished stage
-resume_from: ""         # stage to run next (set when resume: true)
+last_stage: ""          # orient | map | change | leave — 上一会话已完成的阶段
+resume_from: ""         # 本会话应从哪一阶段接着（resume: true 时填写）
 ```
 
-## User ask
+## 用户诉求
 
-<!-- verbatim summary -->
+<!-- 原话摘要 -->
 
-## Success criteria
+## 成功标准
 
 - [ ]
 
-## Fast path (if any)
+## Fast path（如有）
 
-- Reason:
-- User-specified files/symbols:
+- 理由：
+- 用户指定的文件/符号：
 
-## Resume (if any)
+## 续跑（如有）
 
-- Prior artifacts read:
-- Why this `resume_from`:
-- Handoff hint used (from notes.md, if any):
+- 已读的既有产物：
+- 为何设此 `resume_from`：
+- 使用的交接提示（来自 notes.md，如有）：
 
-## Repo guides read
+## 已读仓规
 
-- [ ] AGENTS.md / CLAUDE.md / rules / README (mark N/A if absent)
-- Build:
-- Test:
+- [ ] AGENTS.md / CLAUDE.md / rules / README（无则标 N/A）
+- 构建：
+- 测试：
 
-## Blockers / asks for user
+## 阻塞 / 需用户补充
 
 -
 
-## Notes
+## 备注
 
 -

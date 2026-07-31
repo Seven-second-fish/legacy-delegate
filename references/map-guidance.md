@@ -1,26 +1,26 @@
-# Map guidance
+# Map 指引
 
-Keep maps **task-scoped**. Do not boil the ocean.
+地图保持**任务范围**。不要整仓考古。
 
-## Prefer order
+## 建议顺序
 
-1. Locate runtime/config entry for the symptom or feature area
-2. Trace one critical path with file:symbol breadcrumbs
-3. List fan-in callers of the hottest symbol (blast radius)
-4. Separate confirmed facts from guesses
-5. Freeze a small change boundary before editing
+1. 定位症状或功能区的运行时/配置入口
+2. 沿一条关键路径留下 文件:符号 面包屑
+3. 列出最热符号的 fan-in 调用方（影响面）
+4. 区分已证实事实与猜测
+5. 改码前冻结较小的改动边界
 
-## Good path line
+## 好的路径写法
 
-`HTTP /login` → `AuthController.login` → `SessionService.create` → `RedisStore.set` → failure at TTL config
+`HTTP /login` → `AuthController.login` → `SessionService.create` → `RedisStore.set` → 失败于 TTL 配置
 
-## Bad map
+## 差的地图
 
-- Only directory tree dump
-- “Seems like auth is wrong” with no files
-- Marking `complete` while Unknowns block the fix and no questions asked
+- 只有目录树倾倒
+- 「感觉是鉴权问题」却无文件
+- Unknowns 仍挡住修复却标 `complete`，也不问用户
 
-## Depth vs mode
+## 深度与模式
 
-- `delegate`: shortest path that supports a reviewable change
-- `onboard`: same path + one-sentence role of each hop
+- `delegate`：能支撑可审改动的最短路径
+- `onboard`：同路径 + 每一跳一句角色说明

@@ -2,12 +2,12 @@
   {
     "id": 1,
     "prompt": "用 legacy-delegate：遗留 Node 服务里 POST /checkout 在带优惠券时 500。先摸清链路再修，证据至少 L1。",
-    "expected": "Orient→Map→Change→Leave；写入 .delegate/.../；Map complete 后再改代码；回复含 Verdict/Evidence/Risks/Artifacts；宣称完成前跑 check 脚本"
+    "expected": "Orient→Map→Change→Leave；写入 .delegate/.../；Map complete 后再改代码；回复含 结论/证据/风险/产物；宣称完成前跑 check 脚本"
   },
   {
     "id": 2,
     "prompt": "用 legacy-delegate：在支付回调加幂等键校验，可能跨 controller/service/repo。mode=onboard，type=feature。",
-    "expected": "走 feature-workflow；Map 含 blast radius 与边界；onboard 多写 Why；不顺手大重构"
+    "expected": "走 feature-workflow；Map 含影响面与边界；onboard 多写为什么；不顺手大重构"
   },
   {
     "id": 3,

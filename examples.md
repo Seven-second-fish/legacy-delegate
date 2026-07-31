@@ -1,58 +1,58 @@
-# Example walkthrough (fictional)
+# 示例走通（虚构）
 
-> 真实仓验收见 README「Demo：cakeshop」与 [Seven-second-fish/cakeshop](https://github.com/Seven-second-fish/cakeshop)。下文为虚构走通，便于不依赖环境时理解闸门。
+> 真实仓验收见 README「真实 Demo：cakeshop」与 [Seven-second-fish/cakeshop](https://github.com/Seven-second-fish/cakeshop)。下文为虚构走通，便于不依赖环境时理解闸门。
 
-Repo: tiny Node service. Symptom: `POST /checkout` returns 500 when cart has a coupon.
+仓库：小型 Node 服务。症状：购物车带优惠券时 `POST /checkout` 返回 500。
 
 ## Orient
 
 `.delegate/checkout-coupon-500/task.md`
 
-- type: bug, mode: delegate  
-- success: 200 + discounted total; no 500  
-- test: `npm test -- checkout`
+- type: bug，mode: delegate  
+- 成功：200 + 折扣后总额；不再 500  
+- 测试：`npm test -- checkout`
 
-## Map (complete)
+## Map（complete）
 
-Path:
+路径：
 
-`POST /checkout` → `CheckoutController.handle` → `PricingService.applyCoupon` → `CouponRepo.find` → throws on null `expiresAt`
+`POST /checkout` → `CheckoutController.handle` → `PricingService.applyCoupon` → `CouponRepo.find` → 读取空 `expiresAt` 时抛错
 
-Touch: `pricing/coupon.js`, `checkout/controller.js`  
-Boundary: fix null expiry handling in PricingService only; do not redesign cart.
+触点：`pricing/coupon.js`、`checkout/controller.js`  
+边界：只修 PricingService 对空过期时间的处理；不重做购物车。
 
-## Change (L2)
+## Change（L2）
 
-- Hypothesis: missing expiry treated as crash → confirmed  
-- Patch: treat null expiry as non-expiring; add unit test  
-- `evidence_grade: L2` — test green
+- 假设：缺失过期时间被当成崩溃 → 已证实  
+- 补丁：将空过期视为永不过期；补单元测试  
+- `evidence_grade: L2` — 测试通过
 
 ## Leave
 
-Regress: unit test + manual checkout with coupon lacking `expiresAt`.  
-Unknown: whether legacy coupons rely on crash for fraud (ask product).
+回归：单元测试 + 手工 checkout（优惠券无 `expiresAt`）。  
+未知：历史优惠券是否依赖 500 做风控（问产品）。
 
-## Fast path contrast
+## Fast path 对照
 
-User: “Only change `pricing/coupon.js` null check, I know the path.”  
-→ `fast_path: true`, short map, same evidence rules.
+用户：「只改 `pricing/coupon.js` 的 null 判断，链路我清楚。」  
+→ `fast_path: true`，短 map，证据规则不变。
 
 ---
 
-## Resume: interrupted at Map → new session
+## 续跑：Map 中断 → 新会话
 
-Snapshot artifacts: [examples/resume-interrupted-map/](examples/resume-interrupted-map/).
+产物快照：[examples/resume-interrupted-map/](examples/resume-interrupted-map/)。
 
-### Session 1 (stops mid-Map)
+### 会话 1（停在 Map 半程）
 
-- Orient done; `map.md` left `status: draft` (path stops at `applyCoupon`; blast radius unknown)
-- `notes.md` **Handoff for resume**: `resume_from: map`; **no business edits until Map complete**
-- `task.md`: `last_stage: orient`, `resume_from: map`, `status: in_progress`
+- Orient 完成；`map.md` 留在 `status: draft`（路径停在 `applyCoupon`；影响面未知）
+- `notes.md` **续跑交接**：`resume_from: map`；**Map complete 前禁止改业务代码**
+- `task.md`：`last_stage: orient`，`resume_from: map`，`status: in_progress`
 
-### Session 2 (user: “continue checkout-coupon-500”)
+### 会话 2（用户：「继续 checkout-coupon-500」）
 
-1. Orient **resume**: read same `.delegate/checkout-coupon-500/` (not a new slug)
-2. Set `resume: true`; honor handoff → stay on **Map** (do not jump to Change on chat memory)
-3. Finish Map DoD → `status: complete` → Change (L2) → Leave → checker OK → `status: done`
+1. Orient **续跑**：读同一 `.delegate/checkout-coupon-500/`（不开新 slug）
+2. 设 `resume: true`；按交接留在 **Map**（禁止凭聊天记忆跳进 Change）
+3. 补完 Map DoD → `status: complete` → Change（L2）→ Leave → 检查脚本 OK → `status: done`
 
-**Gate check:** Session 2 must not patch while Map is still draft.
+**闸门核对：** 会话 2 在 Map 仍为 draft 时不得打补丁。

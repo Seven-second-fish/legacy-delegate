@@ -4,9 +4,7 @@
 
 **Map first. Change second. Leave evidence.**
 
-An auditable **legacy-codebase delegation** skill: force unfamiliar AI agents to **map call chains before editing**, then ship bugfixes / features / light refactors **with evidence** humans can review in 30 seconds.
-
-[English](README.md) · [简体中文](README.zh-CN.md)
+可审计的遗留仓代工 Skill —— 让不熟项目的 AI **先摸清再改**，修 bug / 加功能 / 轻量重构，并留下可审证据。
 
 [![GitHub stars](https://img.shields.io/github/stars/Seven-second-fish/legacy-delegate?style=social)](https://github.com/Seven-second-fish/legacy-delegate/stargazers)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
@@ -14,112 +12,111 @@ An auditable **legacy-codebase delegation** skill: force unfamiliar AI agents to
 [![Cursor Skill](https://img.shields.io/badge/Cursor-Skill-000000?logo=cursor)](https://cursor.com/docs/context/skills)
 [![Agent Skills](https://img.shields.io/badge/Agent%20Skills-compatible-0A7B3E)](https://agentskills.io/)
 
-[Install](#install) · [30-second overview](#30-second-overview) · [Live demo](#live-demo-cakeshop) · [Usage](#usage) · [FAQ](#faq)
+[安装](#安装) · [30 秒看懂](#30-秒看懂) · [真实 Demo](#真实-demo-cakeshop) · [用法](#用法) · [FAQ](#faq)
 
 </div>
 
 ---
 
-## The problem
+## 痛点
 
-When AI edits unfamiliar legacy code, it often fails like this:
+AI 改遗留代码时，常见翻车：
 
-| What happens | Cost |
-|--------------|------|
-| Jumps into the “obvious” file and patches | Misses same-pattern siblings / other layers |
-| Claims “fixed” with no evidence | Senior review means re-digging the chain |
-| Edits sources but forgets rebuild / wrong layer | Prod still 500 — wasted cycle |
+| 现象 | 代价 |
+|------|------|
+| 看到相关文件就直接改 | 漏同模式 / 漏调用层 |
+| 宣称「修好了」但无证据 | 老人复审要重挖一遍 |
+| 改了源码忘 rebuild / 测错层 | 线上仍 500，白忙一场 |
 
-`legacy-delegate` turns **understand-before-edit** into a **checkable work protocol** — not another “please read carefully” prompt.
+`legacy-delegate` 把「先理解再改」做成**可检查的作业闸门**，不是又一篇「请仔细阅读代码」的提示词。
 
 ---
 
-## 30-second overview
+## 30 秒看懂
 
 ```mermaid
 flowchart LR
-  A[Orient<br/>scope task] --> B[Map<br/>trace chain]
+  A[Orient<br/>定任务] --> B[Map<br/>画链路]
   B --> C{Map complete?}
-  C -->|no| B
-  C -->|yes| D[Change<br/>minimal patch]
-  D --> E[Leave<br/>notes + evidence]
-  E --> F[check script<br/>before done]
+  C -->|否| B
+  C -->|是| D[Change<br/>最小改动]
+  D --> E[Leave<br/>notes + 证据]
+  E --> F[check script<br/>宣称 done]
 ```
 
-| Stage | Artifact | Hard rule |
-|-------|----------|-----------|
-| **Orient** | `task.md` | type / mode / success criteria |
-| **Map** | `map.md` | **no business-code edits until `complete`** |
-| **Change** | `change.md` + code | evidence ≥ L1; never claim done at L0 |
-| **Leave** | `notes.md` | how to regress + known unknowns |
+| 阶段 | 产物 | 硬约束 |
+|------|------|--------|
+| **Orient** | `task.md` | 类型 / 模式 / 成功标准 |
+| **Map** | `map.md` | **未 complete 禁止改业务代码** |
+| **Change** | `change.md` + 代码 | 证据 ≥ L1，禁止 L0 宣称 done |
+| **Leave** | `notes.md` | 怎么回归、已知未知 |
 
-Default mode: `delegate` (short verdict + evidence for seniors who only review)  
-Optional: `onboard` (more “why” for newcomers)
-
----
-
-## Features
-
-- **No Map, no Change** — protocol gate + optional script against “looks familiar, ship it”
-- **Evidence grades L0 / L1 / L2** — L0 cannot claim done; L1 = reproducible; L2 = tests / probes
-- **bug / feature / light refactor** on one rope, with typed Change strategies
-- **Artifacts on disk** under `.delegate/<task-slug>/` — human-auditable, next agent can resume
-- **Cross-session resume** — continue the same slug; unfinished Map still blocks edits
-- **Anti-stub checker** — empty sections / placeholder tables fail
-- **Explicit invocation only** — `disable-model-invocation: true` so tiny edits are not forced into the full flow
+默认模式：`delegate`（短结论 + 证据，给甩手的老人审）  
+可选：`onboard`（多写「为什么」，给新人学）
 
 ---
 
-## Install
+## 特性
 
-### Recommended: `npx skills`
+- **无 Map 不准改** — 协议闸门 + 可选脚本，降低「眼熟就过」
+- **证据分级 L0/L1/L2** — L0 不得宣称完成；L1 可复现；L2 测试/探针
+- **bug / feature / 轻量 refactor** 同一条绳，Change 子策略写死
+- **产物落盘** `.delegate/<task-slug>/` — 人可审、下个 Agent 可续
+- **跨会话续跑** — 同一 slug 接着干；Map 未 complete 仍禁改码
+- **反 stub 检查脚本** — 空章节 / 占位表格直接 FAIL
+- **显式调用** — `disable-model-invocation: true`，小改不会被强行套流程
+
+---
+
+## 安装
+
+### 推荐：`npx skills`
 
 ```bash
 npx skills add Seven-second-fish/legacy-delegate -g
 ```
 
-### Manual clone
+### 手动克隆
 
 ```bash
 git clone https://github.com/Seven-second-fish/legacy-delegate.git \
   ~/.cursor/skills/legacy-delegate
 ```
 
-Then **explicitly invoke** in Cursor chat (auto-mount is off):
+装好后在 Cursor 聊天中**显式调用**（本 skill 关闭自动挂载）：
 
 ```text
-Use legacy-delegate: this legacy checkout endpoint returns 500 with a coupon.
-Map the chain first, then fix. Evidence at least L1.
+用 legacy-delegate：这个遗留模块提交订单会 500，先摸清链路再修，证据至少 L1。
 ```
 
-Or type `/legacy-delegate` if your client supports name-based triggers.
+或输入 `/legacy-delegate`（若客户端支持按 name 触发）。
 
 ---
 
-## Live demo (cakeshop)
+## 真实 Demo（cakeshop）
 
-Demo repo: [`Seven-second-fish/cakeshop`](https://github.com/Seven-second-fish/cakeshop) (Java / Tomcat / Docker)
+Demo 仓：[`Seven-second-fish/cakeshop`](https://github.com/Seven-second-fish/cakeshop)（Java / Tomcat / Docker）
 
 ### Before → After
 
-| | Without the skill | With `legacy-delegate` |
-|--|-------------------|-------------------------|
-| Approach | Spot a Servlet, add `if` | Orient → Map (touches + boundary) → Change → Leave |
-| Bug: empty-cart `delItem` | Easy to miss sibling `changeIn`; no audit trail | **500 NPE → 302**; same pattern in Map boundary |
-| Feature: submit empty cart | Half-guarded; no regress notes | **500 → 200 + message**; checker OK |
-| Happy path | Often skipped | Login → add → submit → **order success**; guards did not false-positive |
+| | 不启 skill | 启 `legacy-delegate` |
+|--|------------|----------------------|
+| 做法 | 看到 Servlet 直接加 `if` | Orient → Map（触点+边界）→ Change → Leave |
+| bug：`delItem` 空车 | 易漏同文件 `changeIn`；无档可审 | **500 NPE → 302**；同模式一并列入边界 |
+| feature：空车提交 | 易只挡一半；无回归说明 | **500 → 200 + 提示**；检查脚本 OK |
+| 黄金路径 | 常漏测「有货能否下单」 | 登录→加购→提交 → **订单成功**，守卫未误伤 |
 
-**One-liner:** for the same empty-session NPE class — force a chain map and change boundary, then patch with L1 evidence so you do not “ship on vibe” or forget to rebuild the container.
+**价值一句话**：同一类空 session NPE —— 强制先画链路与改动边界，再改码并留下 L1 证据，避免「眼熟就过、容器未重建」。
 
-DIY A/B: fix the same issue once bare, once with the skill, and paste `.delegate/` artifacts into the PR description.
+自备对比：同一小问题先裸改一次，再启 skill 走一遍，把 `.delegate/` 产物贴进 PR 描述即可。
 
 ---
 
-## Usage
+## 用法
 
-1. Describe the task (bug / feature / light refactor)
-2. Invoke this skill
-3. The agent writes into the **target repo**:
+1. 描述任务（bug / 加功能 / 轻量重构）
+2. 调用本 skill
+3. Agent 在**目标仓**写入：
 
 ```text
 .delegate/<task-slug>/
@@ -129,103 +126,103 @@ DIY A/B: fix the same issue once bare, once with the skill, and paste `.delegate
 └── notes.md
 ```
 
-4. Before claiming done, run:
+4. 宣称完成前跑检查：
 
 ```bash
 bash ~/.cursor/skills/legacy-delegate/scripts/check_delegate_artifacts.sh \
   .delegate/<task-slug>
 ```
 
-Add `.delegate/` to the target repo’s `.gitignore` (artifacts may include environment details).
+建议把目标仓的 `.delegate/` 加入 `.gitignore`（产物可含环境细节，默认不入库）。
 
 ### Fast path
 
-If you already named exact files and own the chain, request fast path: still need a short map + evidence ≥ L1; do not skip Leave.
+你已给出精确文件且自认链路清楚时，可要求 fast path：仍须短 map + 证据 ≥ L1，不能跳过 Leave。
 
-### Resume / cross-session
+### Resume / 跨会话续跑
 
-If a prior chat left `.delegate/<task-slug>/`, say:
+若上次对话已留下 `.delegate/<task-slug>/`，直接说：
 
 ```text
-Use legacy-delegate: resume .delegate/checkout-coupon-500
+用 legacy-delegate：继续 .delegate/checkout-coupon-500
 ```
 
-or simply “continue” (agent picks the newest `in_progress` / `blocked` slug, or asks).
+或只说「继续」（Agent 优先接最新的 `in_progress` / `blocked`，否则问你 slug）。
 
-- Same folder continues; set `resume: true`, `last_stage`, `resume_from` in `task.md`
-- **Unfinished gates still apply** — Map not complete ⇒ no business code edits
-- Stopping mid-task: fill **Handoff for resume** in `notes.md`
+- 同一目录续跑；在 `task.md` 写 `resume: true`、`last_stage`、`resume_from`
+- **未完成闸门仍生效** — Map 未 complete ⇒ 仍禁止改业务代码
+- 中途停手：在 `notes.md` 填 **续跑交接**
 
-Walkthrough: [examples.md](examples.md#resume-interrupted-at-map--new-session) · snapshots under `examples/resume-interrupted-map/`.
+走通示例：[examples.md](examples.md#resume-interrupted-at-map--new-session) · 快照见 `examples/resume-interrupted-map/`。
 
-### vs `CLAUDE.md` / `AGENTS.md`
+### 和 `CLAUDE.md` / `AGENTS.md` 的区别
 
-| | Repo handbook | This skill |
-|--|---------------|------------|
-| Role | Standing context & conventions | Per-task work SOP |
-| When | Almost always loaded | Explicit long-chain jobs |
+| | 仓内说明书 | 本 skill |
+|--|------------|----------|
+| 角色 | 常驻背景与仓规 | 单次任务作业 SOP |
+| 何时 | 几乎总在 | 显式调用长链路任务 |
 
-Orient **reads repo rules first**, then runs the flow. Repo rules win over skill defaults.
+Orient 会**先读**仓规，再跑流程。仓规优先于本 skill 默认习惯。
 
 ---
 
-## Repository layout
+## 仓库结构
 
 ```text
 legacy-delegate/
-├── SKILL.md          # main protocol (agent entry)
-├── PLAN.md           # spec, gates, roadmap
-├── examples.md       # fictional walkthrough (+ resume)
-├── examples/         # snapshot artifacts (e.g. resume-interrupted-map)
+├── SKILL.md          # 主流程（Agent 执行入口）
+├── PLAN.md           # 规格、闸门、路线图
+├── examples.md       # 虚构小仓走通（含续跑）
+├── examples/         # 产物快照（如 resume-interrupted-map）
 ├── templates/        # task / map / change / notes
-├── references/       # bug / feature / refactor / map / resume guides
+├── references/       # bug / feature / refactor / map / resume 指引
 └── scripts/
     └── check_delegate_artifacts.sh
 ```
 
 ---
 
-## When to use / when not to
+## 何时用 / 何时别用
 
-**Use when**
+**适合**
 
-- Inheriting legacy modules or long investigation chains
-- Cross-layer features with unclear blast radius
-- Refactors you are afraid will explode; “AI edits, I only review”
+- 接手老项目、陌生模块、长链路 bug
+- 跨多层加功能、影响面不清
+- 重构怕改炸；「让 AI 改，我只审」
 
-**Skip when**
+**不适合**
 
-- Pure typo / copy, file already named
-- Concept explanation only — no repo changes
-- Full patch already exists and only needs applying
-- Needs debugger / prod signals you cannot obtain → set `blocked`, do not guess
+- 纯 typo / 文案，且已指定文件
+- 只要概念解释、不动仓
+- 已有完整补丁只需代粘贴
+- 必须 debugger / 线上观测才能定位，且当前环境取不到证 → 应 `blocked`，勿瞎改
 
 ---
 
 ## FAQ
 
 <details>
-<summary><b>Are the gates kernel-enforced?</b></summary>
+<summary><b>闸门真能强制吗？</b></summary>
 
-No. They are protocol + `check_delegate_artifacts.sh`. Agents should run the script before claiming done. Humans still judge substance in `map.md` / `change.md`.
+不能内核级强制。靠协议约束 + `check_delegate_artifacts.sh`；Agent 宣称 done 前应跑脚本。人审仍看 `map.md` / `change.md` 实质内容。
 </details>
 
 <details>
-<summary><b>Is this too heavy for seniors?</b></summary>
+<summary><b>会不会太重、老人嫌烦？</b></summary>
 
-Default `delegate` mode is short. Fast path exists when files are known. Tiny edits should not invoke this skill at all.
+默认 `delegate` 输出短结论；明确文件时可走 Fast path。纯小改本来就不该调用本 skill。
 </details>
 
 <details>
-<summary><b>How is this different from a code-review skill?</b></summary>
+<summary><b>和普通 code review skill 有何不同？</b></summary>
 
-This skill aims at **delegated delivery** (ship the change + evidence), not a report or PR comments. Understanding exists so you can change — and you must Map before Change.
+本 skill 目标是**代工交付**（改完 + 证据），不是停在报告或 PR 评论。读懂是为了改，且改之前必须有 Map。
 </details>
 
 <details>
-<summary><b>Does it work with Claude / Codex?</b></summary>
+<summary><b>支持 Claude / Codex 吗？</b></summary>
 
-It follows the Agent Skills shape (`SKILL.md` + templates/scripts). Install via `npx skills add` for multiple agents; Cursor is the primary validated environment.
+遵循 Agent Skills 形态（`SKILL.md` + templates/scripts）。可用 `npx skills add` 装到多 Agent；Cursor 为主要验证环境。
 </details>
 
 ---
@@ -236,14 +233,13 @@ It follows the Agent Skills shape (`SKILL.md` + templates/scripts). Install via 
 
 ---
 
-## Docs & license
+## 文档与许可
 
-- Skill: [SKILL.md](SKILL.md)
-- Spec / plan: [PLAN.md](PLAN.md)
-- Fictional example: [examples.md](examples.md)
-- Demo repo: [cakeshop](https://github.com/Seven-second-fish/cakeshop)
-- Chinese README: [README.zh-CN.md](README.zh-CN.md)
+- 主技能：[SKILL.md](SKILL.md)
+- 规格与计划：[PLAN.md](PLAN.md)
+- 虚构示例：[examples.md](examples.md)
+- Demo 仓：[cakeshop](https://github.com/Seven-second-fish/cakeshop)
 
 License: [MIT](LICENSE)
 
-If this skill saves you one bad legacy patch cycle, a **Star** helps others find it. Issues / PRs with real long-chain cases welcome.
+如果这个 skill 帮你少翻一次车，欢迎 **Star** ⭐ —— 也欢迎 Issue / PR 分享你的长链路案例。

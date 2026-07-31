@@ -1,17 +1,18 @@
 #!/usr/bin/env bash
-# check_delegate_artifacts.sh — protocol gate helper for legacy-delegate
-# Usage: bash check_delegate_artifacts.sh .delegate/<task-slug>
+# check_delegate_artifacts.sh — legacy-delegate 协议闸门辅助
+# 用法: bash check_delegate_artifacts.sh .delegate/<task-slug>
 #
-# Checks (done path):
-#   - required files exist
-#   - map complete (or fast_path) + section markers
-#   - evidence_grade L1|L2 (not L0)
-#   - naive anti-stub: sections not left as template placeholders
+# 完成路径检查：
+#   - 必填文件存在
+#   - map complete（或 fast_path）+ 章节标记
+#   - evidence_grade 为 L1|L2（非 L0）
+#   - 朴素反 stub：章节不能仍是模板占位
+# 章节名支持中文模板；英文旧产物仍兼容。
 set -euo pipefail
 
 DIR="${1:-}"
 if [[ -z "$DIR" || ! -d "$DIR" ]]; then
-  echo "usage: $0 .delegate/<task-slug>"
+  echo "用法: $0 .delegate/<task-slug>"
   exit 2
 fi
 
@@ -19,12 +20,13 @@ fail=0
 need() {
   local f="$1"
   if [[ ! -f "$DIR/$f" ]]; then
-    echo "MISSING: $DIR/$f"
+    echo "缺失: $DIR/$f"
     fail=1
   fi
 }
 
 # Extract body under a ## heading until next ## / EOF; strip code fences for scan.
+# heading 可为正则（中|英）。
 section_body() {
   local file="$1"
   local heading="$2"
@@ -32,7 +34,8 @@ section_body() {
     BEGIN { IGNORECASE=1; insec=0 }
     /^## / {
       if (insec) exit
-      if (index(tolower($0), tolower(h)) > 0) { insec=1; next }
+      line=tolower($0)
+      if (line ~ h) { insec=1; next }
     }
     insec { print }
   ' "$file" | sed '/^```/d'
@@ -47,14 +50,12 @@ section_has_substance() {
   if [[ -z "${body//[[:space:]]/}" ]]; then
     return 1
   fi
-  # Drop markdown table separator rows and pure placeholder bullets/cells
-  # Drop markdown table separator/header-only rows, nested headings, and pure placeholders
   echo "$body" | awk '
     function trim(s) { gsub(/^[[:space:]]+|[[:space:]]+$/, "", s); return s }
-    function cell_empty(s) { s=trim(s); return (s=="") }
     function is_header_cell(s,   t) {
       t=tolower(trim(s))
-      return (t=="path" || t=="symbol" || t=="why" || t=="file" || t=="change" || t=="item" || t=="result")
+      return (t=="path" || t=="symbol" || t=="why" || t=="file" || t=="change" || t=="item" || t=="result" \
+        || t=="路径" || t=="符号" || t=="原因" || t=="文件" || t=="改动" || t=="项" || t=="结果")
     }
     /^[[:space:]]*$/ { next }
     /^[[:space:]]*#{1,6}[[:space:]]/ { next }
@@ -83,20 +84,26 @@ section_has_substance() {
   '
 }
 
+has_section() {
+  local file="$1"
+  local pattern="$2"
+  grep -qiE "^##[[:space:]]+.*(${pattern})" "$file"
+}
+
 require_section_substance() {
   local file="$1"
-  local heading="$2"
+  local heading_re="$2"
   local label="$3"
   if [[ ! -f "$file" ]]; then
     return
   fi
-  if ! grep -qiE "^##[[:space:]]+.*${heading}" "$file"; then
-    echo "FAIL: $label missing section: $heading"
+  if ! has_section "$file" "$heading_re"; then
+    echo "失败: $label 缺少章节: $heading_re"
     fail=1
     return
   fi
-  if ! section_has_substance "$file" "$heading"; then
-    echo "FAIL: $label section looks empty/stub: $heading"
+  if ! section_has_substance "$file" "$heading_re"; then
+    echo "失败: $label 章节疑似空壳/占位: $heading_re"
     fail=1
   fi
 }
@@ -109,63 +116,73 @@ need notes.md
 investigate_only=0
 if [[ -f "$DIR/task.md" ]]; then
   if grep -qiE 'status:[[:space:]]*investigate_only' "$DIR/task.md"; then
-    echo "OK: investigate_only (change.md may be light)"
+    echo "OK: investigate_only（change.md 可较轻）"
     investigate_only=1
   fi
   if grep -qiE 'status:[[:space:]]*blocked|status:[[:space:]]*aborted' "$DIR/task.md"; then
-    echo "OK: blocked/aborted — skip done checks"
+    echo "OK: blocked/aborted — 跳过完成检查"
     exit 0
   fi
 fi
 
+# 章节别名：中文模板 | 英文旧产物
+MAP_TOUCH='触点列表|Touch list'
+MAP_BOUNDARY='改动边界|Change boundary'
+MAP_CONFIRMED='已证实|Confirmed'
+MAP_UNKNOWNS='未知|Unknowns'
+MAP_PATH='关键路径|Critical path'
+CHG_DIFF='改动摘要|Diff summary'
+CHG_VERIFY='验证|Verification'
+NOTES_WHAT='改了什么|What changed'
+NOTES_REGRESS='如何回归|How to regress'
+TASK_SUCCESS='成功标准|Success criteria'
+
 if [[ -f "$DIR/map.md" ]]; then
   if ! grep -qiE 'status:[[:space:]]*complete' "$DIR/map.md"; then
     if [[ -f "$DIR/task.md" ]] && grep -qiE 'fast_path:[[:space:]]*true' "$DIR/task.md"; then
-      echo "WARN: map not complete but fast_path=true — ensure short map has touch list + boundary"
+      echo "警告: map 未 complete 但 fast_path=true — 请确认短 map 含触点列表 + 改动边界"
     else
-      echo "FAIL: map.md status is not complete (and fast_path not set)"
+      echo "失败: map.md status 不是 complete（且未设 fast_path）"
       fail=1
     fi
   fi
-  for section in "Touch list" "Change boundary" "Confirmed" "Unknowns"; do
-    if ! grep -qi "$section" "$DIR/map.md"; then
-      echo "FAIL: map.md missing section marker: $section"
+  for section in "$MAP_TOUCH" "$MAP_BOUNDARY" "$MAP_CONFIRMED" "$MAP_UNKNOWNS"; do
+    if ! grep -qiE "$section" "$DIR/map.md"; then
+      echo "失败: map.md 缺少章节标记: $section"
       fail=1
     fi
   done
-  # Anti-stub on map (always when map present and not aborted)
-  require_section_substance "$DIR/map.md" "Touch list" "map.md"
-  require_section_substance "$DIR/map.md" "Change boundary" "map.md"
+  require_section_substance "$DIR/map.md" "$MAP_TOUCH" "map.md"
+  require_section_substance "$DIR/map.md" "$MAP_BOUNDARY" "map.md"
   if grep -qiE 'status:[[:space:]]*complete' "$DIR/map.md"; then
-    require_section_substance "$DIR/map.md" "Critical path" "map.md"
-    require_section_substance "$DIR/map.md" "Confirmed" "map.md"
+    require_section_substance "$DIR/map.md" "$MAP_PATH" "map.md"
+    require_section_substance "$DIR/map.md" "$MAP_CONFIRMED" "map.md"
   fi
 fi
 
 if [[ -f "$DIR/change.md" ]]; then
   if grep -qiE 'evidence_grade:[[:space:]]*L0' "$DIR/change.md"; then
-    echo "FAIL: evidence_grade L0 cannot claim done"
+    echo "失败: evidence_grade L0 不得宣称完成"
     fail=1
   elif [[ "$investigate_only" -eq 0 ]]; then
     if ! grep -qiE 'evidence_grade:[[:space:]]*L[12]' "$DIR/change.md"; then
-      echo "FAIL: change.md must set evidence_grade L1 or L2"
+      echo "失败: change.md 必须设置 evidence_grade L1 或 L2"
       fail=1
     fi
-    require_section_substance "$DIR/change.md" "Diff summary" "change.md"
-    require_section_substance "$DIR/change.md" "Verification" "change.md"
+    require_section_substance "$DIR/change.md" "$CHG_DIFF" "change.md"
+    require_section_substance "$DIR/change.md" "$CHG_VERIFY" "change.md"
   fi
 fi
 
 if [[ -f "$DIR/notes.md" && "$investigate_only" -eq 0 ]]; then
-  require_section_substance "$DIR/notes.md" "What changed" "notes.md"
-  require_section_substance "$DIR/notes.md" "How to regress" "notes.md"
+  require_section_substance "$DIR/notes.md" "$NOTES_WHAT" "notes.md"
+  require_section_substance "$DIR/notes.md" "$NOTES_REGRESS" "notes.md"
 fi
 
-# task.md success criteria should not be only empty checkboxes when status=done
 if [[ -f "$DIR/task.md" ]] && grep -qiE 'status:[[:space:]]*done' "$DIR/task.md"; then
-  if grep -qiE 'Success criteria' "$DIR/task.md"; then
-    if ! section_has_substance "$DIR/task.md" "Success criteria"; then
-      echo "FAIL: task.md Success criteria looks empty/stub while status=done"
+  if grep -qiE "$TASK_SUCCESS" "$DIR/task.md"; then
+    if ! section_has_substance "$DIR/task.md" "$TASK_SUCCESS"; then
+      echo "失败: task.md 成功标准在 status=done 时疑似空壳"
       fail=1
     fi
   fi

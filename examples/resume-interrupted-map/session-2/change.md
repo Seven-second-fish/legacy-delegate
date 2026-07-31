@@ -1,29 +1,52 @@
-# Change
+# 改动
 
 ```yaml
 task_slug: checkout-coupon-500
 evidence_grade: L2
 ```
 
-## Hypotheses tried
+## 计划（对齐 Map 边界）
 
-1. Null `expiresAt` treated as crash → **confirmed**
+- 在 PricingService 将空/缺失 `expiresAt` 视为永不过期，并补测试
 
-## Diff summary
+## 已测假设（bug）/ 触点计划（feature|refactor）
 
-- `PricingService.applyCoupon`: treat null/missing `expiresAt` as non-expiring
-- Added unit test `coupon-null-expiry`
+| 项 | 结果 |
+|----|------|
+| 空 `expiresAt` 被当成崩溃 | **已证实** |
 
-## Before
+## 改动摘要
 
-- `POST /checkout` with coupon `expiresAt: null` → 500
+| 文件 | 改动 |
+|------|------|
+| `pricing/coupon.js` | 空/缺失过期视为永不过期 |
+| 测试 | 新增 `coupon-null-expiry` |
 
-## After
+## 验证
 
-- Same request → 200 + discounted total
-- `npm test -- checkout` green
+### 步骤
 
-## Evidence
+1. 种入 `expiresAt: null` 的优惠券 → checkout → 断言 200
 
-- Steps: seed coupon with null expiry → checkout → assert 200
-- Automation: unit test passes (`evidence_grade: L2`)
+### 之前
+
+- `POST /checkout` + 空过期优惠券 → 500
+
+### 之后
+
+- 同请求 → 200 + 折扣总额
+- `npm test -- checkout` 通过
+
+### 命令 / 测试 / 日志（脱敏）
+
+```
+npm test -- checkout
+```
+
+## 证据等级说明
+
+- 自动化测试通过 → `evidence_grade: L2`
+
+## 残留风险
+
+- 产品是否依赖旧 500 行为：见 notes

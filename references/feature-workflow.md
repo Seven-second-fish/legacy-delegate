@@ -1,8 +1,8 @@
-# Feature workflow
+# Feature 流程
 
-1. From Map, list all touchpoints needed for the behavior (API, storage, config, callers).
-2. Prefer smallest vertical slice that meets success criteria.
-3. Match existing patterns in-repo (naming, error handling, tests).
-4. Implement inside change boundary; avoid drive-by cleanups.
-5. Verify with tests or explicit manual steps (L1/L2).
-6. Note compatibility risks (callers, migrations, feature flags) in `change.md` / `notes.md`.
+1. 从 Map 列出实现该行为所需全部触点（API、存储、配置、调用方）。
+2. 优先能满足成功标准的最小竖切。
+3. 对齐仓内既有模式（命名、错误处理、测试）。
+4. 在改动边界内实现；避免顺手大扫除。
+5. 用测试或明确手工步骤验证（L1/L2）。
+6. 在 `change.md` / `notes.md` 记下兼容风险（调用方、迁移、特性开关）。

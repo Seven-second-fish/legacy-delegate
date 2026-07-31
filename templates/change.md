@@ -1,4 +1,4 @@
-# Change
+# 改动
 
 ```yaml
 type: bug | feature | refactor
@@ -6,45 +6,45 @@ evidence_grade: L0 | L1 | L2
 status: in_progress | verified | abandoned
 ```
 
-## Plan (tied to map boundary)
+## 计划（对齐 Map 边界）
 
 -
 
-## Hypotheses tested (bug) / touch plan (feature|refactor)
+## 已测假设（bug）/ 触点计划（feature|refactor）
 
-| Item | Result |
-|------|--------|
+| 项 | 结果 |
+|----|------|
 | | |
 
-## Diff summary
+## 改动摘要
 
-| File | Change |
-|------|--------|
+| 文件 | 改动 |
+|------|------|
 | | |
 
-## Verification
+## 验证
 
-### Steps
+### 步骤
 
 1.
 
-### Before
+### 之前
 
 -
 
-### After
+### 之后
 
 -
 
-### Commands / tests / logs (redact secrets)
+### 命令 / 测试 / 日志（脱敏）
 
 ```
 ```
 
-## Evidence grade justification
+## 证据等级说明
 
 -
 
-## Residual risk
+## 残留风险
 
 -

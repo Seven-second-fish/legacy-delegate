@@ -2,9 +2,12 @@
 
 # legacy-delegate
 
-**Map first. Change second. Leave evidence.**
+**先摸清，再动手。改完留下证据。**
 
-可审计的遗留仓（legacy codebase）代工 Skill —— map-first，让不熟项目的 AI **先摸清再改**（bugfix / feature / light refactor），并留下可审证据（L0/L1/L2）。
+> 遗留仓里，AI 最爱「眼熟就过」。  
+> 这个 Skill 把代工变成一门课：**没画完链路不准改，没证据不准喊 done。**
+
+可审计的 legacy 代工 —— bugfix / 加功能 / 轻量重构，同一条绳：Orient → Map → Change → Leave。
 
 [![GitHub stars](https://img.shields.io/github/stars/Seven-second-fish/legacy-delegate?style=social)](https://github.com/Seven-second-fish/legacy-delegate/stargazers)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
@@ -12,23 +15,55 @@
 [![Cursor Skill](https://img.shields.io/badge/Cursor-Skill-000000?logo=cursor)](https://cursor.com/docs/context/skills)
 [![Agent Skills](https://img.shields.io/badge/Agent%20Skills-compatible-0A7B3E)](https://agentskills.io/)
 
-[安装](#安装) · [30 秒看懂](#30-秒看懂) · [真实 Demo](#真实-demo-cakeshop) · [用法](#用法) · [FAQ](#faq)
+**30 秒上手** → [安装](#安装) · **先看结果** → [真实 Demo](#真实-demo) · [为什么要用](#为什么要用) · [用法](#用法) · [用法示例](#用法示例) · [FAQ](#faq)
 
 </div>
 
 ---
 
-## 痛点
+## 为什么要用
 
-AI 改遗留代码时，常见翻车：
+裸改省的是几轮对话；翻车贵的是——**修错层、漏同模式、「应该好了」、下个窗口全忘光**。
 
-| 现象 | 代价 |
-|------|------|
-| 看到相关文件就直接改 | 漏同模式 / 漏调用层 |
-| 宣称「修好了」但无证据 | 老人复审要重挖一遍 |
-| 改了源码忘 rebuild / 测错层 | 线上仍 500，白忙一场 |
+`legacy-delegate` 不教模型「更会聊天」，它只做一件专业的事：把长链路代工变成**可检查、可交接的作业**。
 
-`legacy-delegate` 把「先理解再改」做成**可检查的作业闸门**，不是又一篇「请仔细阅读代码」的提示词。
+| 你受够的 | 开了之后 |
+|----------|----------|
+| 看到相关文件就下手，同模式漏一半 | **Map 未 complete → 禁止改业务代码** |
+| 「修好了」——复审还得自己重挖 | 证据至少 **L1**：同一路径，改前红、改后绿 |
+| 聊断了，上下文蒸发 | `.delegate/<slug>/` 落盘，**跨会话续跑** |
+| 老人只想 30 秒拍板 | `delegate`：短结论 + 证据 + 风险，甩手可审 |
+
+**不是又一篇「请仔细阅读代码」的提示词**——是闸门 + 模板 + 检查脚本。小改别套；越不熟、越跨层、越要对人负责，越该显式调用。
+
+### Token？换个算法
+
+会贵一点：中等题大约多 **一两万到四万** token。贵的是纪律，不是多建一个文件夹。
+
+少开一轮「修完又炸」的救火，通常就回本。路径门清？走 **[Fast path](#fast-path)**，Map 砍短，证据留下。
+
+> **小改别开。长链路、要留痕、怕返工——开。** Token 买闸门，不买仪式感。
+
+---
+
+## 真实 Demo
+
+同一类空 session NPE，在 [`cakeshop`](https://github.com/Seven-second-fish/cakeshop)（Java / Tomcat / Docker）上对照：
+
+| | 裸改 | 启 `legacy-delegate` |
+|--|------|----------------------|
+| 做法 | Servlet 里直接加 `if` | 先画触点与**改动边界**，再最小补丁 |
+| `delItem` 空车 | 易漏同文件 `changeIn` | **500 NPE → 302**，同模式进边界 |
+| 空车提交 | 易只挡一半 | **500 → 200 + 提示**，检查脚本 OK |
+| 有货下单 | 常忘回归 | 黄金路径仍通，守卫未误伤 |
+
+浏览器打开权威三幕轮播：[docs/demo-walkthrough.html](docs/demo-walkthrough.html)
+
+![裸改 vs 启 skill](docs/demo-bare-vs-skill.gif)
+
+[静图](docs/demo-bare-vs-skill.png) · [分享短贴](docs/SHARE.md)
+
+自己仓也能 A/B：同一题先裸改、再启 skill，把 `.delegate/` 贴进 PR——复审立刻有东西可看。
 
 ---
 
@@ -36,112 +71,59 @@ AI 改遗留代码时，常见翻车：
 
 ```mermaid
 flowchart LR
-  A[Orient<br/>定任务] --> B[Map<br/>画链路]
-  B --> C{Map complete?}
+  A[Orient 定任务] --> B[Map 画链路]
+  B --> C{complete?}
   C -->|否| B
-  C -->|是| D[Change<br/>最小改动]
-  D --> E[Leave<br/>notes + 证据]
-  E --> F[check script<br/>宣称 done]
+  C -->|是| D[Change 最小改]
+  D --> E[Leave 证据]
+  E --> F[check → done]
 ```
 
-| 阶段 | 产物 | 硬约束 |
-|------|------|--------|
-| **Orient** | `task.md` | 类型 / 模式 / 成功标准 |
-| **Map** | `map.md` | **未 complete 禁止改业务代码** |
-| **Change** | `change.md` + 代码 | 证据 ≥ L1，禁止 L0 宣称 done |
-| **Leave** | `notes.md` | 怎么回归、已知未知 |
+| 阶段 | 硬约束 |
+|------|--------|
+| **Map** | 未 complete → **不准改业务代码**（合法 fast path 除外） |
+| **Change** | 证据 **≥ L1**；L0 不得宣称完成 |
+| **Leave** | 怎么回归、已知未知写清楚 |
 
-默认模式：`delegate`（短结论 + 证据，给甩手的老人审）  
-可选：`onboard`（多写「为什么」，给新人学）
+产物在目标仓：`.delegate/<task-slug>/{task,map,change,notes}.md`  
+模式默认 `delegate`（给甩手的人审）；可选 `onboard`（多写为什么，给新人学）。
 
----
-
-## 特性
-
-- **无 Map 不准改** — 协议闸门 + 可选脚本，降低「眼熟就过」
-- **证据分级 L0/L1/L2** — L0 不得宣称完成；L1 可复现；L2 测试/探针
-- **bug / feature / 轻量 refactor** 同一条绳，Change 子策略写死
-- **产物落盘** `.delegate/<task-slug>/` — 人可审、下个 Agent 可续
-- **跨会话续跑** — 同一 slug 接着干；Map 未 complete 仍禁改码
-- **轻量 git 线索** — Map 可对触点附 churn/作者，不作 git 故事
-- **反 stub 检查脚本** — 空章节 / 占位表格直接 FAIL
-- **显式调用** — `disable-model-invocation: true`，小改不会被强行套流程
+**能力一览**：bug / feature / 轻量 refactor · 跨会话续跑 · 可选 git 线索 · 反 stub 检查脚本 · **显式调用**（小改不会被强行套流程）
 
 ---
 
 ## 安装
 
-### 推荐：`npx skills`
-
 ```bash
 npx skills add Seven-second-fish/legacy-delegate -g
 ```
 
-### 手动克隆
+或手动：
 
 ```bash
 git clone https://github.com/Seven-second-fish/legacy-delegate.git \
   ~/.cursor/skills/legacy-delegate
 ```
 
-装好后在 Cursor 聊天中**显式调用**（`disable-model-invocation: true`，不会自动挂载）：
+装好后**显式调用**（`disable-model-invocation: true`，不会自动挂载）：
 
 ```text
-用 legacy-delegate：这个遗留模块提交订单会 500，先 Orient/Map 摸清链路再 bugfix，证据至少 L1。
+用 legacy-delegate：这个遗留模块提交订单会 500，先摸清链路再修，证据至少 L1。
 ```
-
-续跑已有产物：
 
 ```text
 用 legacy-delegate：继续 .delegate/checkout-coupon-500
 ```
 
-或输入 `/legacy-delegate`（若客户端支持按 name 触发）。
-
----
-
-## 真实 Demo（cakeshop）
-
-Demo 仓：[`Seven-second-fish/cakeshop`](https://github.com/Seven-second-fish/cakeshop)（Java / Tomcat / Docker）
-
-### 裸改 vs 启 skill（Demo 资产）
-
-> **权威对照**：浏览器打开 [docs/demo-walkthrough.html](docs/demo-walkthrough.html)（自动轮播三幕）。  
-> GIF / PNG 仅为 README 示意，细节以轮播页与下表 Before→After 为准。
-
-![裸改 vs 启 skill 示意](docs/demo-bare-vs-skill.gif)
-
-[三幕静图](docs/demo-bare-vs-skill.png) · [分享短贴](docs/SHARE.md)（skills.sh / Cursor 社区；第二仓欢迎自带 case）
-
-### Before → After
-
-| | 不启 skill | 启 `legacy-delegate` |
-|--|------------|----------------------|
-| 做法 | 看到 Servlet 直接加 `if` | Orient → Map（触点+边界）→ Change → Leave |
-| bug：`delItem` 空车 | 易漏同文件 `changeIn`；无档可审 | **500 NPE → 302**；同模式一并列入边界 |
-| feature：空车提交 | 易只挡一半；无回归说明 | **500 → 200 + 提示**；检查脚本 OK |
-| 黄金路径 | 常漏测「有货能否下单」 | 登录→加购→提交 → **订单成功**，守卫未误伤 |
-
-**价值一句话**：同一类空 session NPE —— 强制先画链路与改动边界，再改码并留下 L1 证据，避免「眼熟就过、容器未重建」。
-
-自备对比：同一小问题先裸改一次，再启 skill 走一遍，把 `.delegate/` 产物贴进 PR 描述即可。
+也支持 `/legacy-delegate`（若客户端按 name 触发）。
 
 ---
 
 ## 用法
 
-1. 描述任务（bug / 加功能 / 轻量重构）
-2. 调用本 skill
-3. Agent 在**目标仓**写入：
-
-```text
-.delegate/<task-slug>/
-├── task.md
-├── map.md
-├── change.md
-└── notes.md
-```
-
+1. 说清任务（bug / 功能 / 轻量重构）  
+2. 调用本 skill  
+3. Agent 写入 `.delegate/<task-slug>/` 四件套  
 4. 宣称完成前跑检查：
 
 ```bash
@@ -149,44 +131,100 @@ bash ~/.cursor/skills/legacy-delegate/scripts/check_delegate_artifacts.sh \
   .delegate/<task-slug>
 ```
 
-建议把目标仓的 `.delegate/` 加入 `.gitignore`（产物可含环境细节，默认不入库）。
+建议目标仓 `.gitignore` 加入 `.delegate/`。
 
-### Fast path
+### 用法示例
 
-你已给出精确文件且自认链路清楚时，可要求 fast path：仍须短 map + 证据 ≥ L1，不能跳过 Leave。
+**长链路 bug（全 Map）** — 陌生、跨层、要留痕时用：
 
-### 轻量 refactor
+```text
+用 legacy-delegate：POST /checkout 带优惠券会 500，先摸清链路再修，证据至少 L1。
+```
 
-`type: refactor` 时：先**行为锁**（表征测试或手工基线），再改结构；`change.md` 必填 **表征证据**、**回滚点**；默认证据 ≥ L1。禁止跨模块大改或修 bug 时顺手重构。
+Agent 会 Orient → 完整 Map → 定点补丁 → Leave；Map 未 complete 前不改业务代码。
 
-走通示例：[examples.md](examples.md#轻量-refactor抽纯函数行为保持) · 快照见 `examples/light-refactor-extract-fn/`。
+**Fast path** — 文件已知、意图清楚：
 
-### Resume / 跨会话续跑
+```text
+用 legacy-delegate，走 fast path：
+只改 pricing/coupon.js 里空 expiresAt 的 null 处理，
+意图是空值视为永不过期，不要扩范围。证据至少 L1。
+```
 
-若上次对话已留下 `.delegate/<task-slug>/`，直接说：
+三件套：**skill 名** + **精确路径** + **一句话意图**。仍写短 map（触点+边界）与 ≥ L1 证据；不做完整八项 DoD 考古。意图糊（「修一下 checkout」）或一挖跨很多层 → 拒 fast path，走全 Map。
+
+**续跑** — 同一任务跨会话接着干：
 
 ```text
 用 legacy-delegate：继续 .delegate/checkout-coupon-500
 ```
 
-或只说「继续」（Agent 优先接最新的 `in_progress` / `blocked`，否则问你 slug）。
+同一 slug 接着写；Map 未 complete 仍禁改码。中途停 → `notes.md` 填**续跑交接**。  
+示例：[examples.md](examples.md#resume-interrupted-at-map--new-session)
 
-- 同一目录续跑；在 `task.md` 写 `resume: true`、`last_stage`、`resume_from`
-- **未完成闸门仍生效** — Map 未 complete ⇒ 仍禁止改业务代码
-- 中途停手：在 `notes.md` 填 **续跑交接**
+**近邻新任务（暖启动）** — 仓里已有做过的 `.delegate/`，新题在附近但未点名旧产物：
 
-走通示例：[examples.md](examples.md#resume-interrupted-at-map--new-session) · 快照见 `examples/resume-interrupted-map/`。
+```text
+用 legacy-delegate：结账附近优惠券边界又有问题，先摸清再修。
+```
 
-### 和 `CLAUDE.md` / `AGENTS.md` 的区别
+Agent 可扫近邻产物，只摘触点/边界作线索（新开 slug）；相关时会问是否参考。不会把旧 map 直接标成新任务 complete。
 
-| | 仓内说明书 | 本 skill |
-|--|------------|----------|
-| 角色 | 常驻背景与仓规 | 单次任务作业 SOP |
-| 何时 | 几乎总在 | 显式调用长链路任务 |
+**别开 skill** — 已点名文件的 typo / 单行文案、只要解释不动仓、完整补丁只需代粘贴：直接改或直接答，不必套 Orient→Leave。
 
-Orient 会**先读**仓规，再跑流程。仓规优先于本 skill 默认习惯。
+### 轻量 refactor
 
-Map 阶段可对已入触点的文件附可选 **Git 线索**（见 [map-guidance](references/map-guidance.md#何时看-git轻量线索)）；不替代代码链路，也不写入 Map DoD。
+先**行为锁**，再改结构；`change.md` 必填表征证据与回滚点。禁止跨模块大改、修 bug 时顺手重构。  
+示例：`examples/light-refactor-extract-fn/`
+
+### 和仓规的关系
+
+`AGENTS.md` / `CLAUDE.md` = 常驻说明书；本 skill = **单次任务作业 SOP**。Orient 先读仓规，仓规优先。
+
+---
+
+## 何时开 / 何时别开
+
+| 开 | 别开 |
+|----|------|
+| 陌生模块、长链路 bug | 已点名文件的 typo / 文案 |
+| 跨层加功能、影响面不清 | 只要解释、不动仓 |
+| 重构怕炸；「AI 改，我只审」 | 完整补丁只需代粘贴 |
+| 高难度、要对人负责 | 缺复现/环境 → 应 `blocked`，勿瞎改 |
+
+---
+
+## FAQ
+
+<details>
+<summary><b>闸门能强制吗？</b></summary>
+
+不能内核强制。靠协议 + `check_delegate_artifacts.sh`；人审看 `map.md` / `change.md` 实质。
+</details>
+
+<details>
+<summary><b>老人会嫌重吗？</b></summary>
+
+默认短结论；文件清楚走 Fast path；纯小改别调用。见 [为什么要用](#为什么要用)。
+</details>
+
+<details>
+<summary><b>为什么耗 token / 怎么少耗？值吗？</b></summary>
+
+不承诺比裸改更便宜；优化的是返工与误伤，不是单次最少 token。值在少翻车（少一轮假修复往往回本）。少耗靠分流：纯小改别调用、点名文件+意图走 Fast path、陌生/跨层才付全 Map；续跑/暖启动读 `.delegate/` 摊薄后续会话。详见 [SKILL.md](SKILL.md) Token 经济与 [references/token-economy.md](references/token-economy.md)。
+</details>
+
+<details>
+<summary><b>和 code review skill 啥区别？</b></summary>
+
+目标是**代完 + 留证**，不是停在评论。读懂是为了改，且改前必须有 Map。
+</details>
+
+<details>
+<summary><b>Claude / Codex？</b></summary>
+
+Agent Skills 形态；`npx skills add` 可装多端。Cursor 为主要验证环境。
+</details>
 
 ---
 
@@ -194,64 +232,17 @@ Map 阶段可对已入触点的文件附可选 **Git 线索**（见 [map-guidanc
 
 ```text
 legacy-delegate/
-├── SKILL.md          # 主流程（Agent 执行入口）
-├── PLAN.md           # 规格、闸门、路线图
-├── CONTRIBUTING.md   # 贡献说明
-├── examples.md       # 虚构小仓走通（含续跑）
-├── examples/         # 产物快照
-├── docs/             # Demo GIF/PNG / 轮播页 / 分享文案
-├── scripts/          # check（含 --draft）+ smoke_examples + generate_demo_assets
-├── test-prompts.json # 轻量 eval 提示
-├── templates/        # task / map / change / notes
-├── references/       # bug / feature / refactor / map / resume 指引
-└── scripts/
-    └── check_delegate_artifacts.sh
+├── SKILL.md           # Agent 执行入口
+├── PLAN.md            # 规格与路线图
+├── templates/         # task / map / change / notes
+├── references/        # bug · feature · refactor · map · resume · warm-start · token-economy
+├── scripts/           # check（含 --draft）· smoke · demo 资产
+├── examples.md        # 虚构走通
+├── examples/          # 产物快照
+├── docs/              # Demo 轮播 / GIF / 分享
+├── test-prompts.json  # 轻量 eval
+└── CONTRIBUTING.md
 ```
-
----
-
-## 何时用 / 何时别用
-
-**适合**
-
-- 接手老项目、陌生模块、长链路 bug
-- 跨多层加功能、影响面不清
-- 重构怕改炸；「让 AI 改，我只审」
-
-**不适合**
-
-- 纯 typo / 文案，且已指定文件
-- 只要概念解释、不动仓
-- 已有完整补丁只需代粘贴
-- 必须 debugger / 线上观测才能定位，且当前环境取不到证 → 应 `blocked`，勿瞎改
-
----
-
-## FAQ
-
-<details>
-<summary><b>闸门真能强制吗？</b></summary>
-
-不能内核级强制。靠协议约束 + `check_delegate_artifacts.sh`；Agent 宣称 done 前应跑脚本。人审仍看 `map.md` / `change.md` 实质内容。
-</details>
-
-<details>
-<summary><b>会不会太重、老人嫌烦？</b></summary>
-
-默认 `delegate` 输出短结论；明确文件时可走 Fast path。纯小改本来就不该调用本 skill。
-</details>
-
-<details>
-<summary><b>和普通 code review skill 有何不同？</b></summary>
-
-本 skill 目标是**代工交付**（改完 + 证据），不是停在报告或 PR 评论。读懂是为了改，且改之前必须有 Map。
-</details>
-
-<details>
-<summary><b>支持 Claude / Codex 吗？</b></summary>
-
-遵循 Agent Skills 形态（`SKILL.md` + templates/scripts）。可用 `npx skills add` 装到多 Agent；Cursor 为主要验证环境。
-</details>
 
 ---
 
@@ -263,13 +254,8 @@ legacy-delegate/
 
 ## 文档与许可
 
-- 主技能：[SKILL.md](SKILL.md)
-- 规格与计划：[PLAN.md](PLAN.md)
-- 贡献：[CONTRIBUTING.md](CONTRIBUTING.md)
-- 虚构示例：[examples.md](examples.md)
-- Demo 资产：[docs/](docs/)
-- Demo 仓：[cakeshop](https://github.com/Seven-second-fish/cakeshop)
+[SKILL.md](SKILL.md) · [PLAN.md](PLAN.md) · [examples.md](examples.md) · [docs/](docs/) · [cakeshop Demo](https://github.com/Seven-second-fish/cakeshop) · [CONTRIBUTING](CONTRIBUTING.md)
 
 License: [MIT](LICENSE)
 
-如果这个 skill 帮你少翻一次车，欢迎 **Star** ⭐ —— 也欢迎 Issue / PR 分享你的长链路案例。
+少翻一次车，就值一个 **Star** ⭐ —— 也欢迎用你的长链路 case 开 Issue / PR。

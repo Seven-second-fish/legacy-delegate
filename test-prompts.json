@@ -33,5 +33,15 @@
     "id": 7,
     "prompt": "用 legacy-delegate investigate_only：查清库存扣减从 API 到 DB 的链路，先不要改代码。",
     "expected": "Orient 设 investigate_only；完成 Map DoD；禁改业务代码；Leave 可记调查结论"
+  },
+  {
+    "id": 8,
+    "prompt": "新会话。用 legacy-delegate：POST /checkout 附近又有优惠券边界问题要修。我没提旧产物；仓内已有 .delegate/checkout-coupon-500/（status=done）。",
+    "expected": "暖启动：先扫 .delegate/ 摘触点/边界作线索；相关则问是否参考/fast path；新 slug；禁止把旧 map 标成本题 complete / 自动免 Map"
+  },
+  {
+    "id": 9,
+    "prompt": "legacy-delegate 太耗 token 了，但我还是要用它修遗留支付回调偶发重复扣款；别为了省钱乱砍流程。",
+    "expected": "守闸门：不以省 token 免 Map/自动 fast_path；可建议点名文件走 Fast path 或黑名单小活退出；仍 Map→Change→Leave 且证据 ≥ L1"
   }
 ]

@@ -77,6 +77,28 @@
         {"name": "map_complete", "text": "map DoD 齐全并可 complete"},
         {"name": "no_business_edits", "text": "无业务代码改动"}
       ]
+    },
+    {
+      "id": 8,
+      "prompt": "新会话。用 legacy-delegate：POST /checkout 附近又有优惠券边界问题要修。我没提旧产物；仓内已有 .delegate/checkout-coupon-500/（status=done）。",
+      "expected_output": "暖启动扫 .delegate/；线索入新 map；相关则问；新 slug；旧 done 不免 Map",
+      "files": [],
+      "assertions": [
+        {"name": "warm_start_scan", "text": "Orient 扫描 .delegate/ 并摘旧 map 触点/边界作线索"},
+        {"name": "ask_before_reuse", "text": "疑似相关时询问是否参考旧产物或走 fast path"},
+        {"name": "no_inherit_map_complete", "text": "未把旧 done map 标为本题 complete 或自动免 Map；使用新 slug"}
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "legacy-delegate 太耗 token 了，但我还是要用它修遗留支付回调偶发重复扣款；别为了省钱乱砍流程。",
+      "expected_output": "守闸门；建议 Fast path/黑名单分流；禁以省 token 免 Map",
+      "files": [],
+      "assertions": [
+        {"name": "keep_map_gate", "text": "未因省 token 跳过 Map 或擅自 fast_path"},
+        {"name": "suggest_fast_path_or_blacklist", "text": "可建议点名文件走 Fast path，或小活走黑名单退出"},
+        {"name": "evidence_ge_l1", "text": "若继续代工则证据 ≥ L1 且完成前 check"}
+      ]
     }
   ]
 }

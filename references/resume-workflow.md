@@ -1,5 +1,7 @@
 # 跨会话续跑
 
+> **指针**：新任务要复用近邻（含 `done`）产物的触点/边界 → 见 [warm-start.md](warm-start.md)。暖启动开**新** slug；续跑写**同一** slug——二者勿混淆。
+
 若上一会话留下 `.delegate/<task-slug>/`，下一会话**续写同一目录**——除非用户要求新 slug，否则不要从零重做 Orient。
 
 ## Orient（续跑探测）
@@ -21,9 +23,28 @@
 | `map.md` 缺失或 `status: draft` | `map` | 继续 Map；**禁止改业务代码** |
 | Map `complete` 或合法 `fast_path`，Change 未扎实 | `change` | 按类型流程进入 Change |
 | Change 已完，notes 过薄 / 未跑检查 | `leave` | 补 notes + 跑检查脚本 |
-| `status: done` 且检查通过 | — | **禁止**重打补丁；新活开新 slug |
+| `status: done` 且检查通过 | — | **默认**禁止在同 slug 悄悄重打补丁；**新活**开新 slug。例外见下「验收追诉」 |
 | `status: blocked` | 先前阶段 | 先解决诉求；清除阻塞后再前进 |
 | `status: aborted` | — | 保留产物；新活开新 slug |
+
+## 验收追诉（done 后同控件跟进）
+
+用户在**同一会话**（或明确点名上一 slug）反馈：刚宣称修好的控件仍不可用 / 成功标准有缺口 / notes 里写过的残留风险被戳穿 → **优先重开同一 slug**，不要为「都是下拉框」再开新目录空转 Orient。
+
+| 判定 | 动作 |
+|------|------|
+| 同入口控件、同用户诉求连续追诉（能开→不能选） | 同 slug：`status: in_progress`，`resume: true`，`resume_from: change`（Map 触点未变可保留 complete；边界膨胀则回 `map`） |
+| 追诉只补证据/notes | `resume_from: leave` |
+| 真正新问题（另一模块/另一成功标准族） | 新 slug + 暖启动摘旧触点 |
+
+重开时：
+
+1. **禁止**篡改已写的「改前/改后」冒充一次修好；在 `change.md` **追加**「追诉 #N」段（步骤/前/后），`evidence_grade` 仍 ≥ L1。  
+2. `notes.md` 记：为何 reopen、相对上一版 done 补了什么。  
+3. 再跑 check 脚本；通过后才重新 `status: done`。  
+4. **禁止**用「省 token」跳过追加证据。
+
+与暖启动区别：暖启动 = 新活参考近邻；验收追诉 = **同一审计案件未收口**。
 
 ## 硬规则（与首跑相同）
 

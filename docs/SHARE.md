@@ -5,17 +5,19 @@
 仓库：https://github.com/Seven-second-fish/legacy-delegate  
 安装：`npx skills add Seven-second-fish/legacy-delegate -g`  
 Demo：https://github.com/Seven-second-fish/cakeshop  
-对照动画：[docs/demo-walkthrough.html](demo-walkthrough.html) · [demo-bare-vs-skill.gif](demo-bare-vs-skill.gif)
+对照动画（权威）：[docs/demo-walkthrough.html](demo-walkthrough.html)  
+示意： [demo-bare-vs-skill.gif](demo-bare-vs-skill.gif) · [demo-bare-vs-skill.png](demo-bare-vs-skill.png)
 
 ---
 
 ## skills.sh / Agent Skills 目录短贴
 
 ```text
-legacy-delegate — 遗留仓可审计代工
+legacy-delegate — 遗留仓（legacy codebase）可审计代工
 
-不熟项目的 AI 常「眼熟就改」。这个 skill 强制 Orient → Map → Change → Leave：
-无 Map complete 不准改业务代码，证据 L0 不得宣称完成，产物落在 .delegate/。
+不熟项目的 AI 常「眼熟就改」。这个 skill 强制 map-first：Orient → Map → Change → Leave；
+无 Map complete 不准改业务代码，evidence grade L0/L1/L2（L0 不得宣称完成），产物落在 .delegate/，支持 resume 续跑。
+bugfix / feature / light refactor 同一条协议。
 
 npx skills add Seven-second-fish/legacy-delegate -g
 

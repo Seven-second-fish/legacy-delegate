@@ -4,7 +4,7 @@
 
 **Map first. Change second. Leave evidence.**
 
-可审计的遗留仓代工 Skill —— 让不熟项目的 AI **先摸清再改**，修 bug / 加功能 / 轻量重构，并留下可审证据。
+可审计的遗留仓（legacy codebase）代工 Skill —— map-first，让不熟项目的 AI **先摸清再改**（bugfix / feature / light refactor），并留下可审证据（L0/L1/L2）。
 
 [![GitHub stars](https://img.shields.io/github/stars/Seven-second-fish/legacy-delegate?style=social)](https://github.com/Seven-second-fish/legacy-delegate/stargazers)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
@@ -84,10 +84,16 @@ git clone https://github.com/Seven-second-fish/legacy-delegate.git \
   ~/.cursor/skills/legacy-delegate
 ```
 
-装好后在 Cursor 聊天中**显式调用**（本 skill 关闭自动挂载）：
+装好后在 Cursor 聊天中**显式调用**（`disable-model-invocation: true`，不会自动挂载）：
 
 ```text
-用 legacy-delegate：这个遗留模块提交订单会 500，先摸清链路再修，证据至少 L1。
+用 legacy-delegate：这个遗留模块提交订单会 500，先 Orient/Map 摸清链路再 bugfix，证据至少 L1。
+```
+
+续跑已有产物：
+
+```text
+用 legacy-delegate：继续 .delegate/checkout-coupon-500
 ```
 
 或输入 `/legacy-delegate`（若客户端支持按 name 触发）。
@@ -100,10 +106,12 @@ Demo 仓：[`Seven-second-fish/cakeshop`](https://github.com/Seven-second-fish/c
 
 ### 裸改 vs 启 skill（Demo 资产）
 
-![裸改 vs 启 skill 轮播示意](docs/demo-bare-vs-skill.gif)
+> **权威对照**：浏览器打开 [docs/demo-walkthrough.html](docs/demo-walkthrough.html)（自动轮播三幕）。  
+> GIF / PNG 仅为 README 示意，细节以轮播页与下表 Before→After 为准。
 
-- 浏览器短录屏对照：[docs/demo-walkthrough.html](docs/demo-walkthrough.html)（自动轮播三幕）
-- 分享用短贴：[docs/SHARE.md](docs/SHARE.md)（skills.sh / Cursor 社区；第二仓欢迎自带 case）
+![裸改 vs 启 skill 示意](docs/demo-bare-vs-skill.gif)
+
+[三幕静图](docs/demo-bare-vs-skill.png) · [分享短贴](docs/SHARE.md)（skills.sh / Cursor 社区；第二仓欢迎自带 case）
 
 ### Before → After
 
@@ -191,7 +199,9 @@ legacy-delegate/
 ├── CONTRIBUTING.md   # 贡献说明
 ├── examples.md       # 虚构小仓走通（含续跑）
 ├── examples/         # 产物快照
-├── docs/             # Demo GIF / 轮播页 / 分享文案
+├── docs/             # Demo GIF/PNG / 轮播页 / 分享文案
+├── scripts/          # check（含 --draft）+ smoke_examples + generate_demo_assets
+├── test-prompts.json # 轻量 eval 提示
 ├── templates/        # task / map / change / notes
 ├── references/       # bug / feature / refactor / map / resume 指引
 └── scripts/

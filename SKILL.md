@@ -1,10 +1,11 @@
 ---
 name: legacy-delegate
 description: >-
-  可审计的遗留仓代工：先摸清长调用/数据链路再改代码，按证据等级修 bug / 加功能 / 轻量重构，
-  并留下给人与后续 Agent 可读的笔记。支持跨会话续跑已有 `.delegate/<slug>/`，且不得跳过
-  Map/证据闸门。在显式调用、陌生模块、长链路排查、代修 bug、跨层加功能、续跑上次代工、
-  或不允许跳过理解的安全重构时使用。
+  可审计的遗留仓（legacy codebase）代工：map-first，Orient → Map → Change → Leave；
+  先摸清长调用/数据链路再改代码，按 evidence grade（L0/L1/L2）做 bugfix / feature / light refactor，
+  产物落盘 `.delegate/<slug>/` 供人与后续 Agent 审阅，支持跨会话 resume 同一 slug，不得跳过
+  Map/证据闸门。适用于显式调用、陌生模块、长链路排查、代修 bug、跨层加功能、续跑上次代工、
+  或不允许跳过理解的安全重构；小改 typo 或纯解释勿用。
 disable-model-invocation: true
 ---
 

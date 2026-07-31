@@ -13,5 +13,25 @@
     "id": 3,
     "prompt": "只改 pricing/coupon.js 空 expiresAt 的 null 处理，链路我清楚，走 fast path。用 legacy-delegate。",
     "expected": "fast_path: true + 短 map；仍写 change/notes；证据 ≥ L1；不跳过 Leave"
+  },
+  {
+    "id": 4,
+    "prompt": "用 legacy-delegate 续跑：目标仓已有 .delegate/checkout-coupon-500/，上次停在 Map draft。接着做完并留下证据。",
+    "expected": "同 slug；resume=true + last_stage/resume_from；先读产物；Map 未 complete 禁改码；不凭聊天记忆跳闸门"
+  },
+  {
+    "id": 5,
+    "prompt": "用 legacy-delegate：把 order/total.js 里折扣计算抽成纯函数，行为必须保持。type=refactor。",
+    "expected": "走 refactor-workflow；先表征/行为锁再改结构；change.md 填表征证据+回滚点；证据 ≥ L1；禁跨模块大改"
+  },
+  {
+    "id": 6,
+    "prompt": "用 legacy-delegate：把 README 里一句拼写错误改掉。",
+    "expected": "说明不该用（指定文件 typo）；aborted/blocked 或直接拒绝套全流程；不写空壳 .delegate"
+  },
+  {
+    "id": 7,
+    "prompt": "用 legacy-delegate investigate_only：查清库存扣减从 API 到 DB 的链路，先不要改代码。",
+    "expected": "Orient 设 investigate_only；完成 Map DoD；禁改业务代码；Leave 可记调查结论"
   }
 ]

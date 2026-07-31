@@ -20,6 +20,9 @@ SKILL.md.bak.*
 darwin-result-card.html
 darwin-result-card.png
 
+# Demo font cache (regenerate GIF via scripts/generate_demo_assets.py)
+docs/.fonts/
+
 # Runtime / deps (if added later)
 node_modules/
 __pycache__/

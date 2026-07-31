@@ -1,14 +1,15 @@
 # legacy-delegate — 计划文档
 
-> 状态：第一期 S0–S6 已完成；**第二期 P1–P5 已完成**（可用 + 已开源）  
+> 状态：第一、二、三期已完成；**维护模式**  
 > 位置：`~/.cursor/skills/legacy-delegate/`  
 > GitHub：https://github.com/Seven-second-fish/legacy-delegate · Demo：cakeshop  
-> **当前下一刀：无强制项（维护模式）** — 按需插队曝光/垂直插件；勿默认跑 Darwin  
-> 更新日期：2026-07-31
+> **当前下一刀：无（第三期 Q1–Q5 已完成）**  
+> 更新日期：2026-07-31  
+> 审查：create-skill 清单 · 功能结论见 §6.4
 
 本文件 = **内部规格 + 路线图 + 待办**。对外入口见 `README.md`（中文）。
 
-完成 §6.2 任一项后，必须同步勾选并改文首「当前下一刀」。
+完成 §6.2 / §6.4 任一项后，必须同步勾选并改文首「当前下一刀」。
 
 ---
 
@@ -150,6 +151,51 @@
 - 替代团队规范的通用 code review
 - 与 `CLAUDE.md` / `AGENTS.md` 抢「常驻项目说明书」定位（本 skill 是作业流程，非常驻百科）
 
+### 6.4 第三期（create-skill 审查后）
+
+**审查结论（2026-07-31）**：功能定位**合理**，值得保留并小步打磨，不必大改架构。
+
+| create-skill 维度 | 现状 | 判断 |
+|-------------------|------|------|
+| 定位 / 自由度 | 作业闸门 + 代工交付；显式调用 | ✅ 对症；非百科、非 CR 替代 |
+| 简洁 / ≤500 行 | `SKILL.md` ~95 行；细节在 references | ✅ progressive disclosure |
+| description WHAT+WHEN | 中文第三人称 + 触发场景 | ✅；Q3 可补英文触发词利于目录发现 |
+| 反馈环 | 完成前跑 check + 反 stub | ✅；质量仍靠人审 Map 实质 |
+| 模板 / 脚本 | templates + check 脚本 | ✅ |
+| 引用深度 | SKILL → references 一层 | ✅ |
+| 短板 | bug/feature 指引过薄；Demo GIF 信息弱；缺轻量 eval | → 下列 Q1–Q5 |
+
+**保持不做**：车载垂直百科、全仓自动重构、抢 `AGENTS.md` 常驻位、默认跑 Darwin。
+
+执行顺序：Q1 → Q2 → Q3（可与 Q2 并行）→ Q4 → Q5（随时可插队）。
+
+#### Q1 — 补齐 bug/feature 流程厚度
+
+- [x] 扩充 `references/bug-workflow.md`：假设树、最小补丁、证据落点（仍短于 refactor 全文）
+- [x] 扩充 `references/feature-workflow.md`：触点竖切、兼容风险、回归要点
+- [x] `SKILL.md` Change 表保持链到上述文件；不把细则塞回主文件
+
+#### Q2 — Demo 资产可读性
+
+- [x] 替换/增强 `docs/demo-bare-vs-skill.gif`（可读中文幕或静态 PNG + 保留 walkthrough）
+- [x] README 标明「轮播页为权威对照；GIF 为示意」
+
+#### Q3 — 发现力（description）
+
+- [x] `SKILL.md` description 增加少量英文触发词（legacy, map-first, evidence grade 等），保持中文主述
+- [x] 核对 skills.sh / 安装说明与 description 一致
+
+#### Q4 — 轻量自测 / eval
+
+- [x] 扩充 `test-prompts.json`（含续跑、refactor、fast path、不该用各 ≥1）
+- [x] 可选：`scripts/smoke_examples.sh` 批量跑 examples 目录 check
+
+#### Q5 — 仓卫生与可选增强
+
+- [x] 确认 darwin 产物已 gitignore；README/PLAN 勿链到本地卡片
+- [x] （可选）check 脚本 `--draft`：中途续跑目录允许缺 change 不 FAIL
+- [x] （可选）第二真实仓 case Issue 模板
+
 ---
 
 ## 7. 目标目录结构（实现时）
@@ -260,7 +306,8 @@ description: >
 | S6 | （可选）整理为 GitHub 仓库对外开源 | ✅ README 徽章/安装/Demo + MIT LICENSE 2026-07-30 |
 
 **第一期：S0–S6 完成；黄金路径已验收（cakeshop）。**  
-**第二期：P1–P5 ✅（2026-07-31）；无强制下一刀（维护模式）。**
+**第二期：P1–P5 ✅（2026-07-31）。**  
+**第三期：§6.4 Q1–Q5 已完成（2026-07-31）；维护模式。**
 
 第二期共用验收：无 Map complete 不改业务代码；禁 L0 宣称 done；完成前跑 check 脚本；对外叙事仍是代工 + 可审计；对外 README 为中文；续跑不得跳过未完成闸门。
 
@@ -388,9 +435,11 @@ Map 可在触点列表之外增加 **Git 线索（可选）** 段：对已定位
 
 命令与「何时看」见 [references/map-guidance.md](references/map-guidance.md)。
 
-### 14.12 开源 Demo 与打磨（P4–P5）
+### 14.12 开源 Demo 与打磨（P4–P5）+ 第三期
 
-- Demo 资产：`docs/demo-bare-vs-skill.gif`、`docs/demo-walkthrough.html`；分享底稿 `docs/SHARE.md`（社区发帖须维护者账号操作；第二仓欢迎外部 case）  
-- `SKILL.md` 已手工压缩；**不跑** Darwin（除非用户另说）  
-- `check_delegate_artifacts.sh` 对 `resume: true` 做弱校验（`last_stage` / `resume_from` / done 时 Map 闸门）  
+- Demo：`docs/demo-walkthrough.html` 为权威对照；`demo-bare-vs-skill.gif` / `.png` 为示意；`docs/SHARE.md`  
+- Darwin 卡片已 gitignore，勿链入 README/PLAN；**不跑** Darwin（除非用户另说）  
+- `check_delegate_artifacts.sh`：续跑弱校验 + `--draft`；`scripts/smoke_examples.sh` 批量测 examples  
+- `test-prompts.json` 含续跑 / refactor / fast path / 不该用 / investigate_only  
+- 第二仓 case：`.github/ISSUE_TEMPLATE/second-repo-case.md`  
 - 贡献说明：`CONTRIBUTING.md`

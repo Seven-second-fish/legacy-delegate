@@ -33,7 +33,20 @@ disable-model-invocation: true
 
 类型：`bug` | `feature` | `refactor`（仅**轻量** → [refactor-workflow](references/refactor-workflow.md)）。
 
-**不该用**则说明并 `aborted`/`blocked`：指定文件的 typo/文案；只要解释；完整补丁代粘贴；缺 debugger/线上证据。
+## 不该用 / 黑名单（dim 风险动作）
+
+命中下表 → **先说明原因**，设 `status: aborted`（或 `blocked`），**禁止**为空壳跑满 Orient→Leave 后宣称 done。
+
+| 场景 | 正确处理 |
+|------|----------|
+| 指定文件的 typo / 文案 / 单行格式 | 直接改该处；或 `aborted` 并说明不必用本 skill |
+| 只要解释代码 / 写报告、不改仓 | 直接回答；勿建 `.delegate/` |
+| 用户已给完整补丁「帮我粘贴」 | 按指示应用；勿重开 Map 考古 |
+| 缺 debugger / 线上证据且无法复现 | `blocked` + 精确缺什么；禁瞎改 |
+| 跨模块大重构 / 换架构 | `aborted` 或拆方案问用户；本 skill 只做轻量 refactor |
+| 修 bug 时顺手「清理整文件」 | 🛑 停手；超出 Map 边界则 🔴 CHECKPOINT |
+
+用户虽写了「用 legacy-delegate」但任务属上表 → 仍走黑名单，勿为迁就调用而空转协议。
 
 ## 失败模式（若 X → 先做 / 兜底）
 

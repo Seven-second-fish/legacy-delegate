@@ -1,11 +1,11 @@
 # legacy-delegate — 计划文档
 
-> 状态：第一～八期已完成；**第九期（eval 场景补齐：新增 5 条闸门 eval + fixture git 化，16/16 PASS）已落地**  
+> 状态：第一～九期已完成；**第十期（跨工具验证：opencode/Claude Code 实测一致，Cursor 静态适配）已落地**  
 > 位置：`~/.cursor/skills/legacy-delegate/`  
 > GitHub：https://github.com/Seven-second-fish/legacy-delegate · Demo：cakeshop · Case2：MartinAgent  
-> **当前下一刀：无（第九期 eval 场景补齐已落地；维护待命）**  
+> **当前下一刀：无（第十期跨工具验证已落地；维护待命）**  
 > 更新日期：2026-08-01  
-> 审查：create-skill / skill-creator · §6.4（功能）· **§3（基础规范）** · 2026-08-01 PLAN 去陈旧/减重 · **M1/M2 执行面已合并** · **cakeshop 伪 done 复盘 → §6.7** · **§6.7 skill-creator 审查 + 多 Agent 落地** · **§6.8 真跑 evals（11/11）+ 执行缺口修复** · **§6.9 eval 回归 runner** · **§6.10 第二真实仓 case（MartinAgent）** · **§6.11 eval 场景补齐（5 新闸门 eval + git 化）**
+> 审查：create-skill / skill-creator · §6.4（功能）· **§3（基础规范）** · 2026-08-01 PLAN 去陈旧/减重 · **M1/M2 执行面已合并** · **cakeshop 伪 done 复盘 → §6.7** · **§6.7 skill-creator 审查 + 多 Agent 落地** · **§6.8 真跑 evals（11/11）+ 执行缺口修复** · **§6.9 eval 回归 runner** · **§6.10 第二真实仓 case（MartinAgent）** · **§6.11 eval 场景补齐（5 新闸门 eval + git 化）** · **§6.12 跨工具验证**
 
 本文件 = **内部规格 + 路线图 + 待办**。对外入口见 `README.md`（中文）。
 
@@ -423,6 +423,19 @@ M2 不阻塞 M1。明确不做见 §14.14 实现约束。
 
 **明确不做**：把黑名单判据写成精确阈值表（「多少模块才算架构级」由 agent 凭影响面判断，写成死规则会过拟合）；为 blocked 强制四件套实质（状态合法即通过，维持）。
 
+### 6.12 第十期（维护）— 跨工具验证
+
+**动机**：README 声称「Agent Skills 形态可装多端」，但从未实测 opencode / Claude Code / Cursor 三端行为是否一致。
+
+- [x] 三端环境确认：opencode 1.18.10（本仓默认执行环境）、Claude Code 2.1.220（`~/.claude/skills/` 原生扫描）、Cursor 3.13.10（Windows 侧，无全局 skills 目录，需安装）
+- [x] Claude Code headless 实测两场景：
+  - eval 13 粘贴补丁 → 命中黑名单直改、不建 `.delegate/` ✅
+  - eval 1 全 Map bug → 完整 Orient→Map→Change(L1)→Leave→check OK ✅（runner 复核 PASS）
+- [x] 发现并记录注意事项：Claude Code headless 权限（acceptEdits 拦 Bash cp，需 skip-permissions）、产物格式漂移（默认自创表格而非 templates yaml，check 脚本 grep 不匹配 → 须强调从模板拷贝）、turns 截断（完整流程需 ≥25-40 turns）
+- [x] 落盘 `docs/tooling-matrix.md`（三端行为对照 + 安装方式 + 维护者检查清单）
+
+**明确不做**：为「产物格式漂移」改 check 脚本兼容表格格式（让产物回到模板是正路，迁就格式会弱化闸门）；Windows Cursor headless 自动化（GUI 工具无 CLI 完成态）；为三端写三份 SKILL。
+
 ---
 
 ## 7. 目标目录结构
@@ -543,7 +556,8 @@ M2 不阻塞 M1。明确不做见 §14.14 实现约束。
 **第六期：§6.8 真跑 evals 11/11 PASS + 修复 8 个执行缺口 ✅（2026-08-01）；维护待命。**  
 **第七期：§6.9 eval 回归 runner（manifest + run_evals.sh）✅（2026-08-01）；维护待命。**  
 **第八期：§6.10 第二真实仓 case（MartinAgent，Python，裸改 vs 启 skill）✅（2026-08-01）。**  
-**第九期：§6.11 eval 场景补齐（5 新闸门 eval + fixture git 化 + 3 缺口修复）✅（2026-08-01）；维护待命。**  
+**第九期：§6.11 eval 场景补齐（5 新闸门 eval + fixture git 化 + 3 缺口修复）✅（2026-08-01）。**
+**第十期：§6.12 跨工具验证（opencode/Claude Code 实测一致 + Cursor 适配说明）✅（2026-08-01）；维护待命。**  
 **基础规范：§3.1（Token 经济为支柱 B）；已写入 `SKILL.md` 执行面。**
 
 第二期共用验收：无 Map complete 不改业务代码；禁 L0 宣称 done；完成前跑 check 脚本；对外叙事仍是代工 + 可审计；对外 README 为中文；续跑不得跳过未完成闸门。第四期另加：暖启动不免 Map；改动自检 §3.1 两支柱。第五期另加：交互闭环成功标准；残留风险不得伪 done；同控件追诉同 slug。

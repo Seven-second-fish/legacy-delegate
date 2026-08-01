@@ -61,7 +61,7 @@
 
 ![裸改 vs 启 skill](docs/demo-bare-vs-skill.gif)
 
-[静图](docs/demo-bare-vs-skill.png) · [分享短贴](docs/SHARE.md)
+[静图](docs/demo-bare-vs-skill.png) · [分享短贴](docs/SHARE.md) · [跨工具兼容（opencode / Claude Code / Cursor）](docs/tooling-matrix.md)
 
 自己仓也能 A/B：同一题先裸改、再启 skill，把 `.delegate/` 贴进 PR——复审立刻有东西可看。
 

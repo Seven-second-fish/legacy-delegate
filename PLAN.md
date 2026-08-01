@@ -1,11 +1,11 @@
 # legacy-delegate — 计划文档
 
-> 状态：第一～九期已完成；**第十期（跨工具验证：opencode/Claude Code 实测一致，Cursor 静态适配）已落地**  
+> 状态：第一～十期已完成；**v1.0.0 已发版（CHANGELOG + GitHub Release + 徽章）**  
 > 位置：`~/.cursor/skills/legacy-delegate/`  
 > GitHub：https://github.com/Seven-second-fish/legacy-delegate · Demo：cakeshop · Case2：MartinAgent  
-> **当前下一刀：无（第十期跨工具验证已落地；维护待命）**  
+> **当前下一刀：无（v1.0.0 已发布；维护待命）**  
 > 更新日期：2026-08-01  
-> 审查：create-skill / skill-creator · §6.4（功能）· **§3（基础规范）** · 2026-08-01 PLAN 去陈旧/减重 · **M1/M2 执行面已合并** · **cakeshop 伪 done 复盘 → §6.7** · **§6.7 skill-creator 审查 + 多 Agent 落地** · **§6.8 真跑 evals（11/11）+ 执行缺口修复** · **§6.9 eval 回归 runner** · **§6.10 第二真实仓 case（MartinAgent）** · **§6.11 eval 场景补齐（5 新闸门 eval + git 化）** · **§6.12 跨工具验证**
+> 审查：create-skill / skill-creator · §6.4（功能）· **§3（基础规范）** · 2026-08-01 PLAN 去陈旧/减重 · **M1/M2 执行面已合并** · **cakeshop 伪 done 复盘 → §6.7** · **§6.7 skill-creator 审查 + 多 Agent 落地** · **§6.8 真跑 evals（11/11）+ 执行缺口修复** · **§6.9 eval 回归 runner** · **§6.10 第二真实仓 case（MartinAgent）** · **§6.11 eval 场景补齐（5 新闸门 eval + git 化）** · **§6.12 跨工具验证** · **§6.13 v1.0.0 发布**
 
 本文件 = **内部规格 + 路线图 + 待办**。对外入口见 `README.md`（中文）。
 
@@ -436,6 +436,17 @@ M2 不阻塞 M1。明确不做见 §14.14 实现约束。
 
 **明确不做**：为「产物格式漂移」改 check 脚本兼容表格格式（让产物回到模板是正路，迁就格式会弱化闸门）；Windows Cursor headless 自动化（GUI 工具无 CLI 完成态）；为三端写三份 SKILL。
 
+### 6.13 第十一期（维护）— v1.0.0 发布
+
+**动机**：十一期迭代后能力、验证、工程资产齐备，首次对外发版。
+
+- [x] `CHANGELOG.md`（Keep a Changelog 风格；Added 能力/工程/Verified/版本历程）
+- [x] README 仓库结构补 CHANGELOG 行 + Release 徽章
+- [x] tag `v1.0.0` + GitHub Release（`gh release create`，含亮点/安装/验收说明）
+- [x] Release URL：https://github.com/Seven-second-fish/legacy-delegate/releases/tag/v1.0.0
+
+**版本策略**：SemVer；`SKILL.md`/`templates/` 行为语义变化 → minor；纯文档/脚本工具 → patch。
+
 ---
 
 ## 7. 目标目录结构
@@ -557,7 +568,8 @@ M2 不阻塞 M1。明确不做见 §14.14 实现约束。
 **第七期：§6.9 eval 回归 runner（manifest + run_evals.sh）✅（2026-08-01）；维护待命。**  
 **第八期：§6.10 第二真实仓 case（MartinAgent，Python，裸改 vs 启 skill）✅（2026-08-01）。**  
 **第九期：§6.11 eval 场景补齐（5 新闸门 eval + fixture git 化 + 3 缺口修复）✅（2026-08-01）。**
-**第十期：§6.12 跨工具验证（opencode/Claude Code 实测一致 + Cursor 适配说明）✅（2026-08-01）；维护待命。**  
+**第十期：§6.12 跨工具验证（opencode/Claude Code 实测一致 + Cursor 适配说明）✅（2026-08-01）。**
+**第十一期：§6.13 v1.0.0 发布（CHANGELOG + Release + 徽章）✅（2026-08-01）；维护待命。**  
 **基础规范：§3.1（Token 经济为支柱 B）；已写入 `SKILL.md` 执行面。**
 
 第二期共用验收：无 Map complete 不改业务代码；禁 L0 宣称 done；完成前跑 check 脚本；对外叙事仍是代工 + 可审计；对外 README 为中文；续跑不得跳过未完成闸门。第四期另加：暖启动不免 Map；改动自检 §3.1 两支柱。第五期另加：交互闭环成功标准；残留风险不得伪 done；同控件追诉同 slug。

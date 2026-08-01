@@ -3,6 +3,8 @@
 > 对照第一 Demo [cakeshop](https://github.com/Seven-second-fish/cakeshop)（Java / Tomcat / Docker），本 case 换 **Python** 技术栈验证泛化。
 > 仓：[Seven-second-fish/MartinAgent](https://github.com/Seven-second-fish/MartinAgent)（ReAct 命令行 AI Agent）
 > 日期：2026-08-01 · 模式：bug + fast_path · 证据：L2
+>
+> ⚠️ **仓状态**：MartinAgent 是学习用仓，验证完成后**代码改动与产物已全部还原**（git checkout + 删除 tests/.delegate），仓内未留任何本 case 痕迹。本文件为对照记录，修复方案见下。
 
 ## 题目
 
@@ -56,8 +58,9 @@ agent.py:50 构造 ConversationMemory(max_turns=20)
 
 ## 产物
 
-- `MartinAgent/.delegate/memory-max-turns-trim/`（task / map / change / notes，fast_path: true + 完整 DoD map）
-- `MartinAgent/my-agent/tests/test_memory.py`
+- ~~`MartinAgent/.delegate/memory-max-turns-trim/`（task / map / change / notes，fast_path: true + 完整 DoD map）~~ → 已随还原删除
+- ~~`MartinAgent/my-agent/tests/test_memory.py`（12 用例）~~ → 已随还原删除
+- 修复方案（`_enforce_max_turns()` 强制不变量 + `_load` 裁剪）完整记录于上文「修复（最小 diff）」
 
 ## 备注
 

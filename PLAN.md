@@ -397,11 +397,11 @@ M2 不阻塞 M1。明确不做见 §14.14 实现约束。
 - [x] 裸改对照组：不启 skill 直接修 → 无产物、无证据、无防回归测试（翻车点：无法证明没改坏其他路径）
 - [x] 启 skill 组：fast_path（用户点名文件级+意图）+ 完整 DoD map + 复现 → `_enforce_max_turns()` 强制不变量 + `_load` 裁剪 → `tests/test_memory.py` 12 用例（6 FAIL → 12/12 OK，L2）→ check `RESULT: OK`
 - [x] 主会话独立复核：git diff 只动 2 个 memory 文件 + 新增 tests + .gitignore 1 行；独立复验两场景 ≤ 上限；check 脚本复核 OK
-- [x] 产物：`MartinAgent/.delegate/memory-max-turns-trim/` 四件套（未 commit，留给仓主审阅）；case 文档 `docs/case-martinagent.md`
+- [x] 产物：`MartinAgent/.delegate/memory-max-turns-trim/` 四件套 + `tests/test_memory.py`；case 文档 `docs/case-martinagent.md`
 
 **对照结论**：全 Map（cakeshop）与 fast_path + 完整 map（MartinAgent）两条分流路径各验证一遍；裸改 vs 启 skill 差异 = 产物可审性 + 证据链 + 防回归测试 + 边界纪律。
 
-**不做**：往 MartinAgent 仓 commit/push（产物留在 `.delegate/`，代码 diff 未提交）；浏览器自动化；图片/录屏。
+**不做**：往 MartinAgent 仓 commit/push——该仓是用户学习用仓，验证完成后代码改动、测试与 `.delegate/` 产物已全部还原（git checkout + 删除），仓内零残留；浏览器自动化；图片/录屏。
 
 ---
 

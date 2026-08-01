@@ -1,11 +1,11 @@
 # legacy-delegate — 计划文档
 
-> 状态：第一～五期已完成；**第六期（真跑 evals 11/11 PASS + 修复 8 个执行缺口）已落地**  
+> 状态：第一～六期已完成；**第七期（eval runner 固化：manifest + run_evals.sh 一键回归）已落地**  
 > 位置：`~/.cursor/skills/legacy-delegate/`  
 > GitHub：https://github.com/Seven-second-fish/legacy-delegate · Demo：cakeshop  
-> **当前下一刀：无（第六期 eval 实测 + 缺口修复已落地；维护待命）**  
+> **当前下一刀：无（第七期 eval 回归自动化已落地；维护待命）**  
 > 更新日期：2026-08-01  
-> 审查：create-skill / skill-creator · §6.4（功能）· **§3（基础规范）** · 2026-08-01 PLAN 去陈旧/减重 · **M1/M2 执行面已合并** · **cakeshop 伪 done 复盘 → §6.7** · **§6.7 skill-creator 审查 + 多 Agent 落地** · **§6.8 真跑 evals（11/11）+ 执行缺口修复**
+> 审查：create-skill / skill-creator · §6.4（功能）· **§3（基础规范）** · 2026-08-01 PLAN 去陈旧/减重 · **M1/M2 执行面已合并** · **cakeshop 伪 done 复盘 → §6.7** · **§6.7 skill-creator 审查 + 多 Agent 落地** · **§6.8 真跑 evals（11/11）+ 执行缺口修复** · **§6.9 eval 回归 runner**
 
 本文件 = **内部规格 + 路线图 + 待办**。对外入口见 `README.md`（中文）。
 
@@ -370,6 +370,24 @@ M2 不阻塞 M1。明确不做见 §14.14 实现约束。
 
 规格细则：`evals/results-2026-08-01.md` 为本次执行记录；`evals/prepare_fixtures.sh` 可重跑复现。
 
+### 6.9 第七期（维护）— eval 回归 runner
+
+**动机**：§6.8 的 11 条 eval 是手动 subagent 跑的，改 SKILL 后想回归得重搭环境、逐条喂 prompt、手工核对断言——不可一键重复。本期把「断言核对」固化，让以后的维护刀都能跑回归。
+
+- [x] `evals/manifest.json`：11 条 eval 的机器可读清单（repo / slug / 断言名列表）
+- [x] `scripts/run_evals.sh`：`prepare | list | check | report | all` 五子命令
+  - `prepare`：生成 fixture + 打 `.prepare_stamp` 时间戳（区分预置基线 vs 已执行产物）
+  - `list`：打印每条 prompt 与目标仓（喂给执行 agent）
+  - `check`：逐条跑断言 → PASS / FAIL / SKIP（无产物或产物未更新）；断言 = 产物字段机器核对（四件套、map complete、evidence L1/L2、status done、fast_path、resume、investigate、表征/回滚、追诉段、结果链、暖启动 source、黑名单无 .delegate、check RESULT: OK）
+  - `report`：汇总写 `evals/results/<date>-<n>.md`（不覆盖历史）
+  - `all`：prepare + list + check + report
+- [x] 自测：未执行态 11/11 SKIP ✅；模拟已执行产物 → PASS ✅；负逻辑（缺 fast_path/map draft）→ FAIL 列断言 ✅
+- [x] 历史报告归档：第六期手写结果 → `evals/results/2026-08-01-1.md`
+
+**边界**：runner **不调 LLM**——「执行 eval」仍需 agent 读 SKILL 跑（与产品定位一致：脚本不替代人/Agent 的判断）；断言只核对产物字段，测试真实性靠人审（与 check 脚本一致）。
+
+**复现**：`bash scripts/run_evals.sh all`（默认 `/tmp/legacy-evals`，`--root` 可换目录）。
+
 ---
 
 ## 7. 目标目录结构
@@ -488,6 +506,7 @@ M2 不阻塞 M1。明确不做见 §14.14 实现约束。
 **第四期：M1 + M2 ✅（2026-08-01）。**  
 **第五期：§6.7 按审查瘦身方案落地 ✅（2026-08-01 多 Agent）；维护待命。**  
 **第六期：§6.8 真跑 evals 11/11 PASS + 修复 8 个执行缺口 ✅（2026-08-01）；维护待命。**  
+**第七期：§6.9 eval 回归 runner（manifest + run_evals.sh）✅（2026-08-01）；维护待命。**  
 **基础规范：§3.1（Token 经济为支柱 B）；已写入 `SKILL.md` 执行面。**
 
 第二期共用验收：无 Map complete 不改业务代码；禁 L0 宣称 done；完成前跑 check 脚本；对外叙事仍是代工 + 可审计；对外 README 为中文；续跑不得跳过未完成闸门。第四期另加：暖启动不免 Map；改动自检 §3.1 两支柱。第五期另加：交互闭环成功标准；残留风险不得伪 done；同控件追诉同 slug。

@@ -242,7 +242,8 @@ legacy-delegate/
 ├── PLAN.md            # 规格与路线图
 ├── templates/         # task / map / change / notes
 ├── references/        # bug · feature · refactor · map · resume · warm-start · token-economy
-├── scripts/           # check（含 --draft）· smoke · demo 资产
+├── scripts/           # check（含 --draft）· run_evals 回归 · smoke · demo 资产
+├── evals/             # manifest + fixture 生成器 + 回归结果
 ├── examples.md        # 虚构走通
 ├── examples/          # 产物快照
 ├── docs/              # Demo 轮播 / GIF / 分享

@@ -2,7 +2,7 @@
 
 ```yaml
 type: bug | feature | refactor
-evidence_grade: L0 | L1 | L2
+evidence_grade: L0 | L1 | L2 | N/A   # N/A 仅限 investigate_only（无改动可验证）
 status: in_progress | verified | abandoned
 ```
 

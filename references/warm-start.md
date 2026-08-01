@@ -26,6 +26,7 @@
    - 未确认前：仍按本题做 Map（可缩短定向读）。  
    - **禁止**自动 `fast_path: true`。  
    - **禁止**复制旧 map 改 `status` 冒充本题 `complete`。
+6. **旧产物自证失效（假 done）**：旧 `change.md` 声称已修（`status: done` + L1/L2），但当前代码未见该修复、或复现仍红 → 以**代码为准**，旧 claim 只当线索，按完整 Map 走本题；把「旧 map 疑过期」写进本题「未知」，并在 CHECKPOINT 提示用户旧 done 不可信。
 
 ## 硬约束
 

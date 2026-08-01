@@ -1,11 +1,11 @@
 # legacy-delegate — 计划文档
 
-> 状态：第一～四期已完成；**第五期（验收闭环）按审查瘦身方案已落地**  
+> 状态：第一～五期已完成；**第六期（真跑 evals 11/11 PASS + 修复 8 个执行缺口）已落地**  
 > 位置：`~/.cursor/skills/legacy-delegate/`  
 > GitHub：https://github.com/Seven-second-fish/legacy-delegate · Demo：cakeshop  
-> **当前下一刀：无（§6.7 R1′/R0 eval/模板/R5/R6 已落地；维护待命）**  
+> **当前下一刀：无（第六期 eval 实测 + 缺口修复已落地；维护待命）**  
 > 更新日期：2026-08-01  
-> 审查：create-skill / skill-creator · §6.4（功能）· **§3（基础规范）** · 2026-08-01 PLAN 去陈旧/减重 · **M1/M2 执行面已合并** · **cakeshop 伪 done 复盘 → §6.7** · **§6.7 skill-creator 审查 + 多 Agent 落地**
+> 审查：create-skill / skill-creator · §6.4（功能）· **§3（基础规范）** · 2026-08-01 PLAN 去陈旧/减重 · **M1/M2 执行面已合并** · **cakeshop 伪 done 复盘 → §6.7** · **§6.7 skill-creator 审查 + 多 Agent 落地** · **§6.8 真跑 evals（11/11）+ 执行缺口修复**
 
 本文件 = **内部规格 + 路线图 + 待办**。对外入口见 `README.md`（中文）。
 
@@ -348,6 +348,28 @@ M2 不阻塞 M1。明确不做见 §14.14 实现约束。
 
 **明确仍不做**：浏览器自动化验收；截图强制；语义自动判同控件；为第五期加厚 description；check 中文关键词 WARN。
 
+### 6.8 第六期（维护）— 真跑 evals 与执行缺口修复
+
+**动机**：`evals/evals.json` 11 条从建仓起从未真跑过；PLAN 一直声称「质量靠 eval 验行为」，实际无一次执行记录。本期把测试债还掉。
+
+执行：fixture 生成器 `evals/prepare_fixtures.sh`（11 个隔离 Node 仓，bug 全部可复现为红）→ 每 eval 一个 subagent 加载真实 SKILL 执行 → 主会话独立复核断言 + check 脚本。
+
+- [x] 真跑 11/11：全 Map bug / feature+onboard / fast path / 续跑 / refactor / typo 黑名单 / investigate_only / 暖启动 / token 经济 / 验收追诉 / 结果链 → **全部 PASS**，产物 check 全部 `RESULT: OK`（结果见 `evals/results-2026-08-01.md`）
+- [x] 修复 8 个执行缺口（agent 实测暴露，非纸面审查）：
+  - investigate_only 的 `evidence_grade: N/A`（change 模板 + check 脚本放行、拒绝非 investigate 的 N/A）
+  - 非 git 仓回滚点兜底（refactor-workflow：`.delegate/<slug>/rollback/` 备份）
+  - 基线含无关红测试时行为锁界定（refactor-workflow）
+  - 旧产物假 done → 以代码为准 + 完整 Map（warm-start）
+  - fast path 粒度 = 文件/符号级，模块名不算（SKILL）
+  - 追诉时 map 追加不改写、同文件边界不收紧（resume-workflow）
+  - 同根因多表示并入同 diff（bug-workflow）
+  - 续跑 draft map 实质已足 → 补全即可 complete（SKILL Orient）
+- [x] 复核验证：smoke_examples 仍 OK；N/A 放行/拒绝分支单测过
+
+**明确不做**：check 脚本校验测试真实运行（靠人审实质，维持）；成功标准勾选态脚本强制；fast path 短 map 内容强校验（维持警告级）。
+
+规格细则：`evals/results-2026-08-01.md` 为本次执行记录；`evals/prepare_fixtures.sh` 可重跑复现。
+
 ---
 
 ## 7. 目标目录结构
@@ -465,6 +487,7 @@ M2 不阻塞 M1。明确不做见 §14.14 实现约束。
 **第三期：§6.4 Q1–Q5 ✅（2026-07-31）。**  
 **第四期：M1 + M2 ✅（2026-08-01）。**  
 **第五期：§6.7 按审查瘦身方案落地 ✅（2026-08-01 多 Agent）；维护待命。**  
+**第六期：§6.8 真跑 evals 11/11 PASS + 修复 8 个执行缺口 ✅（2026-08-01）；维护待命。**  
 **基础规范：§3.1（Token 经济为支柱 B）；已写入 `SKILL.md` 执行面。**
 
 第二期共用验收：无 Map complete 不改业务代码；禁 L0 宣称 done；完成前跑 check 脚本；对外叙事仍是代工 + 可审计；对外 README 为中文；续跑不得跳过未完成闸门。第四期另加：暖启动不免 Map；改动自检 §3.1 两支柱。第五期另加：交互闭环成功标准；残留风险不得伪 done；同控件追诉同 slug。

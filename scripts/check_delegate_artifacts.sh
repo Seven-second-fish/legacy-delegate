@@ -207,8 +207,12 @@ if [[ "$DRAFT" -eq 1 ]]; then
 else
 if [[ -f "$DIR/change.md" ]]; then
   if grep -qiE 'evidence_grade:[[:space:]]*L0' "$DIR/change.md"; then
-    echo "失败: evidence_grade L0 不得宣称完成"
-    fail=1
+    if [[ "$investigate_only" -eq 1 ]] && grep -qiE 'evidence_grade:[[:space:]]*N/A' "$DIR/change.md"; then
+      : # investigate_only 允许 N/A（无改动可验证）
+    else
+      echo "失败: evidence_grade L0 不得宣称完成"
+      fail=1
+    fi
   elif [[ "$investigate_only" -eq 0 ]]; then
     if ! grep -qiE 'evidence_grade:[[:space:]]*L[12]' "$DIR/change.md"; then
       echo "失败: change.md 必须设置 evidence_grade L1 或 L2"

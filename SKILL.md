@@ -76,7 +76,7 @@ Orient(task.md | 续跑已有 slug) → Map(DoD|fast_path) → Change(≥L1) →
 
 ### 0) Orient
 
-有 `.delegate/` 则先续跑（用户给出的 slug，或 mtime 最新且 `status` 为 `in_progress`/`blocked` 的目录）：读四件套，设 `resume: true`、`last_stage`、`resume_from`（取值仅 `orient|map|change|leave`）。[resume-workflow](references/resume-workflow.md)。
+有 `.delegate/` 则先续跑（用户给出的 slug，或 mtime 最新且 `status` 为 `in_progress`/`blocked` 的目录）：读四件套，设 `resume: true`、`last_stage`、`resume_from`（取值仅 `orient|map|change|leave`）。draft map 各段已有实质 → 验证补全即可 `complete`，勿重考古。[resume-workflow](references/resume-workflow.md)。
 
 否则新开 slug：`mkdir -p .delegate/<task-slug>/`，拷模板填：`task_slug` `type` `mode` `status` `fast_path` `evidence_target`；成功标准写成可勾选条目；记下仓规构建/测试命令。若仓内已有近邻产物（含 `done`），按 mtime 扫最近 ≤5 个，**只摘**触点列表 + 改动边界（+ 成功标准一行），写入本题 map「假设」或「历史线索」，注明 `source: .delegate/<old-slug>/`，仅作线索 → [warm-start](references/warm-start.md)。路径疑似重叠 → 🔴 CHECKPOINT 问是否参考 / 是否 fast path；若触点重叠且用户话术像「还是不行」→ 先查是否验收追诉（见 [resume](references/resume-workflow.md)），勿单独开新 slug。未确认前仍做本题 Map。**禁止**自动 `fast_path`；**禁止**复制旧 map 改 status 冒充 complete。新活 → 新 slug；旧 map 过期写入「未知」。
 
@@ -86,7 +86,7 @@ Orient(task.md | 续跑已有 slug) → Map(DoD|fast_path) → Change(≥L1) →
 
 ### 1) Map
 
-按 [map.md](templates/map.md)。**DoD（缺一不可 complete）**：入口、关键路径、触点列表、影响面、已证实、假设、未知、改动边界。可选 **Git 线索**（非 DoD）→ [map-guidance](references/map-guidance.md)。Fast path 仅当用户点名文件+意图：`task.md` 写 `fast_path: true`，短 map 至少填触点列表+改动边界。`investigate_only`：Map 可 complete，禁改业务代码。未 complete 且非合法 fast path → 禁 Change。  
+按 [map.md](templates/map.md)。**DoD（缺一不可 complete）**：入口、关键路径、触点列表、影响面、已证实、假设、未知、改动边界。可选 **Git 线索**（非 DoD）→ [map-guidance](references/map-guidance.md)。Fast path 仅当用户点名**文件/符号级**（模块名/主题不算）+ 意图：`task.md` 写 `fast_path: true`，短 map 至少填触点列表+改动边界。`investigate_only`：Map 可 complete，禁改业务代码。未 complete 且非合法 fast path → 禁 Change。  
 🔴 CHECKPOINT：DoD 缺项或边界将膨胀 → 列问题等用户；🛑 STOP 禁 Change。
 
 ### 2) Change

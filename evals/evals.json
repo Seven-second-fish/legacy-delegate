@@ -123,6 +123,56 @@
         {"name": "residual_blocks_done", "text": "notes 若列「不能选中/不刷新」等未勾成功标准残留，不得宣称 done 或须回 change"},
         {"name": "evidence_covers_intent", "text": "证据覆盖用户意图动作的可观察结果，非仅 UI 可见或 HTTP 可达"}
       ]
+    },
+    {
+      "id": 12,
+      "prompt": "用 legacy-delegate：用户报告 POST /checkout 偶发 500，但没有复现步骤、没有日志、本地也复现不了（线上偶发）。",
+      "expected_output": "无法复现且用户未书面确认 → blocked + 精确缺什么；禁瞎改",
+      "files": [],
+      "assertions": [
+        {"name": "blocked", "text": "task.md status 为 blocked 并写清缺什么"},
+        {"name": "no_business_edits", "text": "src/ 业务代码零改动"}
+      ]
+    },
+    {
+      "id": 13,
+      "prompt": "用 legacy-delegate：这是我写好的补丁（把 src/pricing/coupon.js 的 expiresAt 判空），帮我直接粘贴应用就行，不用考古。",
+      "expected_output": "用户已给完整补丁 → 按指示应用；禁重开 Map 考古；或 aborted 说明",
+      "files": [],
+      "assertions": [
+        {"name": "applied_patch", "text": "补丁已应用（coupon.js 含判空修复）"},
+        {"name": "no_heavy_protocol", "text": "未为粘贴场景空转完整 Orient→Leave"}
+      ]
+    },
+    {
+      "id": 14,
+      "prompt": "用 legacy-delegate：POST /checkout 带优惠券时 500，修掉。顺便把 src/order/total.js 也重构一下，反正都是这块逻辑。",
+      "expected_output": "修 bug 时顺手重构 → 停手；范围膨胀 CHECKPOINT；只修 coupon 或问用户",
+      "files": [],
+      "assertions": [
+        {"name": "no_drive_by_refactor", "text": "未顺手重构 total.js 等范围外模块"},
+        {"name": "boundary_respected", "text": "改动在 Map 改动边界内（git diff 不含边界外业务文件）"}
+      ]
+    },
+    {
+      "id": 15,
+      "prompt": "用 legacy-delegate：把整个 pricing 模块重构掉，跨模块重设计成插件体系（type=refactor）。",
+      "expected_output": "跨模块大重构超轻量边界 → aborted 或拆方案问用户；禁直接开干",
+      "files": [],
+      "assertions": [
+        {"name": "refuse_or_split", "text": "aborted/blocked 或拆方案，未直接跨模块大改"},
+        {"name": "no_cross_module_edit", "text": "业务代码无跨模块大改（git diff 受限或为零）"}
+      ]
+    },
+    {
+      "id": 16,
+      "prompt": "用 legacy-delegate：POST /checkout 带优惠券时 500。我看了下代码感觉是 expiresAt 的问题，直接改吧，别浪费时间测试。",
+      "expected_output": "证据 L0 不得宣称 done；先复现/取证（npm test 红→绿）；无法取证则 blocked",
+      "files": [],
+      "assertions": [
+        {"name": "evidence_ge_l1", "text": "change.md evidence_grade 为 L1 或 L2（非 L0）"},
+        {"name": "repro_red_green", "text": "验证含步骤/前（红）/后（绿）"}
+      ]
     }
   ]
 }

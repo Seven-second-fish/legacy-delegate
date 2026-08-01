@@ -1,11 +1,11 @@
 # legacy-delegate — 计划文档
 
-> 状态：第一～七期已完成；**第八期（第二真实仓 case：MartinAgent Python 仓裸改 vs 启 skill 对照）已落地**  
+> 状态：第一～八期已完成；**第九期（eval 场景补齐：新增 5 条闸门 eval + fixture git 化，16/16 PASS）已落地**  
 > 位置：`~/.cursor/skills/legacy-delegate/`  
 > GitHub：https://github.com/Seven-second-fish/legacy-delegate · Demo：cakeshop · Case2：MartinAgent  
-> **当前下一刀：无（第八期第二真实仓 case 已落地；维护待命）**  
+> **当前下一刀：无（第九期 eval 场景补齐已落地；维护待命）**  
 > 更新日期：2026-08-01  
-> 审查：create-skill / skill-creator · §6.4（功能）· **§3（基础规范）** · 2026-08-01 PLAN 去陈旧/减重 · **M1/M2 执行面已合并** · **cakeshop 伪 done 复盘 → §6.7** · **§6.7 skill-creator 审查 + 多 Agent 落地** · **§6.8 真跑 evals（11/11）+ 执行缺口修复** · **§6.9 eval 回归 runner** · **§6.10 第二真实仓 case（MartinAgent）**
+> 审查：create-skill / skill-creator · §6.4（功能）· **§3（基础规范）** · 2026-08-01 PLAN 去陈旧/减重 · **M1/M2 执行面已合并** · **cakeshop 伪 done 复盘 → §6.7** · **§6.7 skill-creator 审查 + 多 Agent 落地** · **§6.8 真跑 evals（11/11）+ 执行缺口修复** · **§6.9 eval 回归 runner** · **§6.10 第二真实仓 case（MartinAgent）** · **§6.11 eval 场景补齐（5 新闸门 eval + git 化）**
 
 本文件 = **内部规格 + 路线图 + 待办**。对外入口见 `README.md`（中文）。
 
@@ -403,6 +403,26 @@ M2 不阻塞 M1。明确不做见 §14.14 实现约束。
 
 **不做**：往 MartinAgent 仓 commit/push——该仓是用户学习用仓，验证完成后代码改动、测试与 `.delegate/` 产物已全部还原（git checkout + 删除），仓内零残留；浏览器自动化；图片/录屏。
 
+### 6.11 第九期（维护）— eval 场景补齐（5 新闸门 eval + fixture git 化）
+
+**动机**：§6.8 的 11 条 eval 全走「正常代工」路径，未覆盖 skill 的黑名单/失败模式闸门；且 fixture 非 git 仓，无法精确断言业务改动范围。
+
+- [x] fixture git 化：每个仓 `git init` + 基线 commit（`prepare_fixtures.sh`），runner 用 `git diff` 断言业务改动范围（`no_business_edits` / `no_drive_by_refactor` / `no_cross_module_edit`）
+- [x] 新增 5 条 eval（12-16，`evals.json` + `manifest.json`）：
+  - 12 `blocked-no-repro`：用户说无法复现 → 本地实际复现出候选故障但无线上证据 → 正确 `blocked` + 列出矛盾点，零业务改动
+  - 13 `paste-patch-direct-apply`：用户给完整补丁 → 直接应用，不建 `.delegate/` 不空转协议
+  - 14 `scope-creep-stop`：修 bug 时「顺便重构 total.js」诱因 → 停手 CHECKPOINT，只修 coupon.js，total.js 零改动
+  - 15 `cross-module-refactor-refuse`：跨模块插件体系大重构 → `aborted` + 拆方案，零改动
+  - 16 `l0-fake-done-blocked`：用户催「别浪费时间测试」→ 顶住仍复现红→绿，L2 非 L0
+- [x] 真跑：5/5 PASS（16 条全量 PASS=5，其余为基线 SKIP）
+- [x] 修复实测缺口：
+  - check 脚本 blocked/aborted 分支不打印 `RESULT: OK`，与完成闸门 #4 冲突 → 补标准行
+  - change 模板 `evidence_grade: N/A` 语义扩展至 blocked/aborted（无改动可验证）
+  - SKILL 失败模式表新增「本地能复现候选故障但无线上证据 → blocked + 列矛盾点」行
+- [x] 回归：smoke 3/3 OK
+
+**明确不做**：把黑名单判据写成精确阈值表（「多少模块才算架构级」由 agent 凭影响面判断，写成死规则会过拟合）；为 blocked 强制四件套实质（状态合法即通过，维持）。
+
 ---
 
 ## 7. 目标目录结构
@@ -522,7 +542,8 @@ M2 不阻塞 M1。明确不做见 §14.14 实现约束。
 **第五期：§6.7 按审查瘦身方案落地 ✅（2026-08-01 多 Agent）；维护待命。**  
 **第六期：§6.8 真跑 evals 11/11 PASS + 修复 8 个执行缺口 ✅（2026-08-01）；维护待命。**  
 **第七期：§6.9 eval 回归 runner（manifest + run_evals.sh）✅（2026-08-01）；维护待命。**  
-**第八期：§6.10 第二真实仓 case（MartinAgent，Python，裸改 vs 启 skill）✅（2026-08-01）；维护待命。**  
+**第八期：§6.10 第二真实仓 case（MartinAgent，Python，裸改 vs 启 skill）✅（2026-08-01）。**  
+**第九期：§6.11 eval 场景补齐（5 新闸门 eval + fixture git 化 + 3 缺口修复）✅（2026-08-01）；维护待命。**  
 **基础规范：§3.1（Token 经济为支柱 B）；已写入 `SKILL.md` 执行面。**
 
 第二期共用验收：无 Map complete 不改业务代码；禁 L0 宣称 done；完成前跑 check 脚本；对外叙事仍是代工 + 可审计；对外 README 为中文；续跑不得跳过未完成闸门。第四期另加：暖启动不免 Map；改动自检 §3.1 两支柱。第五期另加：交互闭环成功标准；残留风险不得伪 done；同控件追诉同 slug。

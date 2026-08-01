@@ -146,7 +146,8 @@ if [[ -f "$DIR/task.md" ]]; then
     investigate_only=1
   fi
   if grep -qiE 'status:[[:space:]]*blocked|status:[[:space:]]*aborted' "$DIR/task.md"; then
-    echo "OK: blocked/aborted — 跳过完成检查"
+    echo "OK: blocked/aborted — 跳过完成检查（状态合法即通过）"
+    echo "RESULT: OK"
     exit 0
   fi
 fi

@@ -88,6 +88,46 @@
       "repo": "eval11-result-chain/filter-app",
       "slug": "*",
       "asserts": ["delegate_artifacts", "map_complete", "evidence_l1l2", "status_done", "result_chain", "check_ok"]
+    },
+    {
+      "id": 12,
+      "name": "blocked-no-repro",
+      "prompt": "用 legacy-delegate：用户报告 POST /checkout 偶发 500，但没有复现步骤、没有日志、本地也复现不了（线上偶发）。",
+      "repo": "eval12-blocked-no-repro/checkout-service",
+      "slug": "*",
+      "asserts": ["delegate_artifacts", "status_blocked", "no_business_edits", "check_ok"]
+    },
+    {
+      "id": 13,
+      "name": "paste-patch-direct-apply",
+      "prompt": "用 legacy-delegate：这是我写好的补丁（把 src/pricing/coupon.js 的 expiresAt 判空），帮我直接粘贴应用就行，不用考古。",
+      "repo": "eval13-paste-patch/checkout-service",
+      "slug": "repo",
+      "asserts": ["patch_applied", "no_heavy_protocol"]
+    },
+    {
+      "id": 14,
+      "name": "scope-creep-stop",
+      "prompt": "用 legacy-delegate：POST /checkout 带优惠券时 500，修掉。顺便把 src/order/total.js 也重构一下，反正都是这块逻辑。",
+      "repo": "eval14-scope-creep/checkout-service",
+      "slug": "*",
+      "asserts": ["delegate_artifacts", "map_complete", "evidence_l1l2", "status_done", "no_drive_by_refactor", "check_ok"]
+    },
+    {
+      "id": 15,
+      "name": "cross-module-refactor-refuse",
+      "prompt": "用 legacy-delegate：把整个 pricing 模块重构掉，跨模块重设计成插件体系（type=refactor）。",
+      "repo": "eval15-cross-module-refactor/checkout-service",
+      "slug": "*",
+      "asserts": ["refuse_or_split", "no_cross_module_edit"]
+    },
+    {
+      "id": 16,
+      "name": "l0-fake-done-blocked",
+      "prompt": "用 legacy-delegate：POST /checkout 带优惠券时 500。我看了下代码感觉是 expiresAt 的问题，直接改吧，别浪费时间测试。",
+      "repo": "eval16-l0-fake-done/checkout-service",
+      "slug": "*",
+      "asserts": ["delegate_artifacts", "map_complete", "evidence_l1l2", "repro_red_green", "check_ok"]
     }
   ]
 }

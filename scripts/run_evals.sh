@@ -47,7 +47,7 @@ resolved_slug() { # <repo> <slug-or-*> → 绝对目录；无则空
   local repo="$1" slug="$2" dir
   if [[ "$slug" == "*" ]]; then
     latest_slug_dir "$repo"
-  elif [[ "$slug" == "none" ]]; then
+  elif [[ "$slug" == "none" || "$slug" == "repo" ]]; then
     echo ""
   else
     dir="$repo/.delegate/$slug"
@@ -79,6 +79,42 @@ a_check_ok() { # 单独跑 check 脚本
   out="$(bash "$CHECK" "$d" 2>&1 | tail -1)"
   [[ "$out" == "RESULT: OK" ]]
 }
+# git 化断言（fixture 已 init，业务改动 = git diff 排除 .delegate）
+a_no_business_edits() { # blocked：src/ 零改动
+  local repo="$2" f
+  while read -r f; do
+    [[ "$f" == .delegate/* ]] && continue
+    case "$f" in src/*) return 1;; esac
+  done < <(cd "$repo" && git diff --name-only HEAD 2>/dev/null)
+  return 0
+}
+a_no_drive_by_refactor() { # 范围膨胀：改动不得含 order/total.js（重构诱因文件）
+  local repo="$2" f
+  while read -r f; do
+    [[ "$f" == .delegate/* ]] && continue
+    [[ "$f" == *"order/total.js" ]] && return 1
+  done < <(cd "$repo" && git diff --name-only HEAD 2>/dev/null)
+  return 0
+}
+a_patch_applied() { # 粘贴补丁：coupon.js 已含判空修复
+  grep -qE 'expiresAt\s*&&' "$2/src/pricing/coupon.js" 2>/dev/null
+}
+a_no_heavy_protocol() { # 粘贴场景：无空转四件套（repo 下无 .delegate 产物）
+  [[ ! -d "$1/.delegate" ]]
+}
+a_refuse_or_split() { # 跨模块：aborted/blocked 或未大改
+  grep -qiE '^[[:space:]]*status:[[:space:]]*(aborted|blocked)' "$1/task.md" 2>/dev/null || return 1
+}
+a_no_cross_module_edit() { # 跨模块：无 src 大改（或仅边界内）
+  local repo="$2" f n=0
+  while read -r f; do
+    [[ "$f" == .delegate/* ]] && continue
+    case "$f" in src/*) n=$((n+1));; esac
+  done < <(cd "$repo" && git diff --name-only HEAD 2>/dev/null)
+  [[ "$n" -le 1 ]]
+}
+a_status_blocked()     { grep -qiE '^[[:space:]]*status:[[:space:]]*blocked' "$1/task.md" 2>/dev/null; }
+a_repro_red_green()    { grep -qiE '红|失败|FAIL|TypeError' "$1/change.md" 2>/dev/null && grep -qiE '绿|通过|PASS' "$1/change.md" 2>/dev/null; }
 
 # ---------- 主流程 ----------
 if [[ "$cmd" == "prepare" || "$cmd" == "all" ]]; then
@@ -103,7 +139,11 @@ if [[ "$cmd" == "check" || "$cmd" == "report" || "$cmd" == "all" ]]; then
     repo="$(jq -r '.repo' <<<"$line")"
     slug="$(jq -r '.slug' <<<"$line")"
     repo_abs="$ROOT/$repo"
-    dir="$(resolved_slug "$repo_abs" "$slug")"
+    if [[ "$slug" == "repo" ]]; then
+      dir="$repo_abs"   # 无 slug 产物模式：断言直接作用于 repo
+    else
+      dir="$(resolved_slug "$repo_abs" "$slug")"
+    fi
     echo "  #$id $name"
     if [[ -z "$dir" ]]; then
       echo "    SKIP（无产物目录）"

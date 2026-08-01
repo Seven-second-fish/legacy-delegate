@@ -756,6 +756,21 @@ base "$ROOT/eval08-warmstart/checkout-service"
 preset_warmstart "$ROOT/eval08-warmstart/checkout-service"
 base "$ROOT/eval09-token-economy/checkout-service"
 
+# eval 12：blocked（无法复现 → blocked 停手）
+base "$ROOT/eval12-blocked-no-repro/checkout-service"
+
+# eval 13：aborted/粘贴补丁（用户给完整补丁 → 直接应用，禁空转协议）
+base "$ROOT/eval13-paste-patch/checkout-service"
+
+# eval 14：范围膨胀（修 bug 时顺手重构 → 停手/CHECKPOINT）
+base "$ROOT/eval14-scope-creep/checkout-service"
+
+# eval 15：跨模块大重构（超轻量边界 → aborted 或拆方案）
+base "$ROOT/eval15-cross-module-refactor/checkout-service"
+
+# eval 16：L0 禁 done（无法取证 → 禁宣称完成；base 仓有真实 bug 作诱因）
+base "$ROOT/eval16-l0-fake-done/checkout-service"
+
 # eval 6：typo 仓（黑名单）
 write "$ROOT/eval06-typo/typo-repo/README.md" <<'EOF'
 # typo-repo
@@ -855,5 +870,18 @@ test('submit refreshes list', () => {
   assert.strictEqual(render().length, 1);
 });
 EOF
+
+# ============ git 化：每个仓 init + 基线 commit（run_evals 用 git diff 精确断言业务改动范围） ============
+git_init_repo() {
+  local d="$1"
+  if [[ -d "$d" ]]; then
+    (cd "$d" && git init -q && git add -A && git -c user.email=eval@local -c user.name=eval commit -qm "fixture baseline")
+  fi
+}
+for d in "$ROOT"/eval*/*/; do
+  if [[ -d "$d" && ( -f "$d/package.json" || -d "$d/src" || -f "$d/README.md" ) ]]; then
+    git_init_repo "$d"
+  fi
+done
 
 echo "scaffold done: $ROOT"

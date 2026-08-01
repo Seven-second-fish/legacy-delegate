@@ -12,6 +12,7 @@
 [![GitHub stars](https://img.shields.io/github/stars/Seven-second-fish/legacy-delegate?style=social)](https://github.com/Seven-second-fish/legacy-delegate/stargazers)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Last commit](https://img.shields.io/github/last-commit/Seven-second-fish/legacy-delegate)](https://github.com/Seven-second-fish/legacy-delegate/commits/main)
+[![Release](https://img.shields.io/github/v/release/Seven-second-fish/legacy-delegate)](https://github.com/Seven-second-fish/legacy-delegate/releases)
 [![Cursor Skill](https://img.shields.io/badge/Cursor-Skill-000000?logo=cursor)](https://cursor.com/docs/context/skills)
 [![Agent Skills](https://img.shields.io/badge/Agent%20Skills-compatible-0A7B3E)](https://agentskills.io/)
 
@@ -247,6 +248,7 @@ legacy-delegate/
 ├── scripts/           # check（含 --draft）· run_evals 回归 · smoke · demo 资产
 ├── evals/             # manifest + fixture 生成器 + 回归结果
 ├── examples.md        # 虚构走通
+├── CHANGELOG.md       # 版本记录
 ├── examples/          # 产物快照
 ├── docs/              # Demo 轮播 / GIF / 分享
 ├── test-prompts.json  # 轻量 eval

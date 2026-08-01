@@ -65,6 +65,8 @@
 
 自己仓也能 A/B：同一题先裸改、再启 skill，把 `.delegate/` 贴进 PR——复审立刻有东西可看。
 
+**第二真实仓 Case（Python）**：[MartinAgent](https://github.com/Seven-second-fish/MartinAgent) 对话记忆裁剪 bug——裸改 vs 启 skill 对照，含 12 个防回归测试（L2）。见 [docs/case-martinagent.md](docs/case-martinagent.md)。
+
 ---
 
 ## 30 秒看懂

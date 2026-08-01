@@ -1,11 +1,11 @@
 # legacy-delegate — 计划文档
 
-> 状态：第一～六期已完成；**第七期（eval runner 固化：manifest + run_evals.sh 一键回归）已落地**  
+> 状态：第一～七期已完成；**第八期（第二真实仓 case：MartinAgent Python 仓裸改 vs 启 skill 对照）已落地**  
 > 位置：`~/.cursor/skills/legacy-delegate/`  
-> GitHub：https://github.com/Seven-second-fish/legacy-delegate · Demo：cakeshop  
-> **当前下一刀：无（第七期 eval 回归自动化已落地；维护待命）**  
+> GitHub：https://github.com/Seven-second-fish/legacy-delegate · Demo：cakeshop · Case2：MartinAgent  
+> **当前下一刀：无（第八期第二真实仓 case 已落地；维护待命）**  
 > 更新日期：2026-08-01  
-> 审查：create-skill / skill-creator · §6.4（功能）· **§3（基础规范）** · 2026-08-01 PLAN 去陈旧/减重 · **M1/M2 执行面已合并** · **cakeshop 伪 done 复盘 → §6.7** · **§6.7 skill-creator 审查 + 多 Agent 落地** · **§6.8 真跑 evals（11/11）+ 执行缺口修复** · **§6.9 eval 回归 runner**
+> 审查：create-skill / skill-creator · §6.4（功能）· **§3（基础规范）** · 2026-08-01 PLAN 去陈旧/减重 · **M1/M2 执行面已合并** · **cakeshop 伪 done 复盘 → §6.7** · **§6.7 skill-creator 审查 + 多 Agent 落地** · **§6.8 真跑 evals（11/11）+ 执行缺口修复** · **§6.9 eval 回归 runner** · **§6.10 第二真实仓 case（MartinAgent）**
 
 本文件 = **内部规格 + 路线图 + 待办**。对外入口见 `README.md`（中文）。
 
@@ -388,6 +388,21 @@ M2 不阻塞 M1。明确不做见 §14.14 实现约束。
 
 **复现**：`bash scripts/run_evals.sh all`（默认 `/tmp/legacy-evals`，`--root` 可换目录）。
 
+### 6.10 第八期（维护）— 第二真实仓 case（MartinAgent）
+
+**动机**：§6.4 Q5 只留了 Issue 模板，从未真跑第二个真实仓。cakeshop 是 Java/Tomcat/Docker + 全 Map；本 case 换 **Python** + fast_path 分流，验证泛化（模板见 `.github/ISSUE_TEMPLATE/second-repo-case.md`）。
+
+- [x] 选仓：用户自己的 [MartinAgent](https://github.com/Seven-second-fish/MartinAgent)（ReAct 命令行 Agent，Python）
+- [x] 题目：对话记忆超出 `max_turns` 不裁剪（`ConversationMemory` 批量注入只删一轮 / `PersistentMemory._load` 从不裁剪）
+- [x] 裸改对照组：不启 skill 直接修 → 无产物、无证据、无防回归测试（翻车点：无法证明没改坏其他路径）
+- [x] 启 skill 组：fast_path（用户点名文件级+意图）+ 完整 DoD map + 复现 → `_enforce_max_turns()` 强制不变量 + `_load` 裁剪 → `tests/test_memory.py` 12 用例（6 FAIL → 12/12 OK，L2）→ check `RESULT: OK`
+- [x] 主会话独立复核：git diff 只动 2 个 memory 文件 + 新增 tests + .gitignore 1 行；独立复验两场景 ≤ 上限；check 脚本复核 OK
+- [x] 产物：`MartinAgent/.delegate/memory-max-turns-trim/` 四件套（未 commit，留给仓主审阅）；case 文档 `docs/case-martinagent.md`
+
+**对照结论**：全 Map（cakeshop）与 fast_path + 完整 map（MartinAgent）两条分流路径各验证一遍；裸改 vs 启 skill 差异 = 产物可审性 + 证据链 + 防回归测试 + 边界纪律。
+
+**不做**：往 MartinAgent 仓 commit/push（产物留在 `.delegate/`，代码 diff 未提交）；浏览器自动化；图片/录屏。
+
 ---
 
 ## 7. 目标目录结构
@@ -507,6 +522,7 @@ M2 不阻塞 M1。明确不做见 §14.14 实现约束。
 **第五期：§6.7 按审查瘦身方案落地 ✅（2026-08-01 多 Agent）；维护待命。**  
 **第六期：§6.8 真跑 evals 11/11 PASS + 修复 8 个执行缺口 ✅（2026-08-01）；维护待命。**  
 **第七期：§6.9 eval 回归 runner（manifest + run_evals.sh）✅（2026-08-01）；维护待命。**  
+**第八期：§6.10 第二真实仓 case（MartinAgent，Python，裸改 vs 启 skill）✅（2026-08-01）；维护待命。**  
 **基础规范：§3.1（Token 经济为支柱 B）；已写入 `SKILL.md` 执行面。**
 
 第二期共用验收：无 Map complete 不改业务代码；禁 L0 宣称 done；完成前跑 check 脚本；对外叙事仍是代工 + 可审计；对外 README 为中文；续跑不得跳过未完成闸门。第四期另加：暖启动不免 Map；改动自检 §3.1 两支柱。第五期另加：交互闭环成功标准；残留风险不得伪 done；同控件追诉同 slug。
